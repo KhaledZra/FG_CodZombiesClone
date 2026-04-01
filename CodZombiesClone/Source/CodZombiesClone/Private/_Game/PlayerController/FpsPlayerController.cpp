@@ -6,8 +6,8 @@
 #include "CodZombiesClone.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "Public/_Game/Characters/BaseCharacter.h"
 #include "Public/_Game/Managers/FpsPlayerCameraManager.h"
+#include "_Game/Characters/PlayerCharacter.h"
 
 AFpsPlayerController::AFpsPlayerController()
 {
@@ -23,8 +23,10 @@ void AFpsPlayerController::BeginPlay()
 void AFpsPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	if (!IsLocalController()) return;
 	
-	CharacterRef = Cast<ABaseCharacter>(InPawn);
+	CharacterRef = Cast<APlayerCharacter>(InPawn);
 	ensure(CharacterRef != nullptr);
 	if (CharacterRef == nullptr)
 	{
@@ -33,7 +35,9 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 	}
 	
 	SetupPlayerInputBinds();
-		
+	CharacterRef->CreatePlayerUI(this);
+	
+	OnNewControllerActivated.Broadcast(this);
 	UE_LOG(Khaled, Display, TEXT("Player Inputs Live!"));
 }
 

@@ -6,11 +6,14 @@
 #include "GameFramework/PlayerController.h"
 #include "FpsPlayerController.generated.h"
 
-class ABaseCharacter;
+class UPlayerUI;
+class APlayerCharacter;
 struct FInputActionValue;
 class UInputMappingContext;
 class UInputAction;
 class UEnhancedInputLocalPlayerSubsystem;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FNewControllerAtivatedDelegate, APlayerController*, Controller);
 
 /**
  *  Simple Fps Player Controller
@@ -24,6 +27,8 @@ class CODZOMBIESCLONE_API AFpsPlayerController : public APlayerController
 public:
 	
 	AFpsPlayerController();
+	
+	FNewControllerAtivatedDelegate OnNewControllerActivated;
 
 protected:
 	
@@ -43,7 +48,7 @@ protected:
 	UInputAction* MouseLookAction;
 	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
-	ABaseCharacter* CharacterRef;
+	APlayerCharacter* CharacterRef;
 
 	/** Overrides */
 	virtual void BeginPlay() override;
