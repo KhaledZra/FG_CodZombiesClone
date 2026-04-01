@@ -3,8 +3,6 @@
 
 #include "_Game/Characters/PlayerCharacter.h"
 
-#include "CodZombiesClone.h"
-
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -13,7 +11,7 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	StartingScore = 500;
-	CurrentScore = 0;
+	CurrentScore = StartingScore;
 }
 
 void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
@@ -22,16 +20,27 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
 	ensure(PlayerUIRef != nullptr);
 	PlayerUIRef->AddToPlayerScreen();
 	
+	PlayerUIRef->SetupPlayerUI(PlayerIndex, this);
+	PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+	
 	// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
 	// 	PlayerUIRef,
 	// 	*this->GetName());
-	
-	GainScore(StartingScore);
 }
 
 void APlayerCharacter::GainScore(int Score)
 {
 	CurrentScore += Score;
-	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore);
+	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+}
+
+void APlayerCharacter::SetPlayerIndex(int Index)
+{
+	this->PlayerIndex = Index;
+}
+
+int APlayerCharacter::GetCurrentScore() const
+{
+	return CurrentScore;
 }
 

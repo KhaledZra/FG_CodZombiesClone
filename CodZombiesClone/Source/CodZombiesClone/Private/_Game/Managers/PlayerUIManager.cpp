@@ -3,6 +3,10 @@
 
 #include "_Game/Managers/PlayerUIManager.h"
 
+#include "CodZombiesClone.h"
+#include "_Game/Characters/PlayerCharacter.h"
+#include "_Game/UI/PlayerUI.h"
+
 
 // Sets default values
 APlayerUIManager::APlayerUIManager()
@@ -11,26 +15,29 @@ APlayerUIManager::APlayerUIManager()
 	PrimaryActorTick.bCanEverTick = false;
 }
 
-void APlayerUIManager::AddPlayerUI(UPlayerUI* PlayerUI)
+void APlayerUIManager::AddPlayerUI(UPlayerUI* PlayerUI, int PlayerIndex)
 {
 	PlayerUis.Add(PlayerUI);
-	UpdateUI(PlayerUI); // Basically telling other players that a new player has arrived and they should add a new UI for them
-}
 
-void APlayerUIManager::UpdateUI(UPlayerUI* CallingUI)
-{
-	for (UPlayerUI* ui : PlayerUis)
+	// The reason this is so fucked up is because we need to maintain the order of the players that are already joined
+	// If we are adding PlayerIndex 3 it's assumed that there are already 3 players in the game, so we need to activate all of them up to the new one
+	for (int i = 0; i < PlayerIndex + 1; ++i)
 	{
-		if (ui == CallingUI) continue;
+		// Makes sure old players are active and the new one is active as well
+		for (UPlayerUI* ui : PlayerUis)
+		{
+			ui->SetPlayerActive(i);
+		}
 		
-		// ui->RegisterNewPlayerUI(CallingUI);
+		// Syncs the real current score of old players with the new player
+		PlayerUI->BP_ScoreUpdated(PlayerUis[i]->PlayerRef->GetCurrentScore(), i);
 	}
 }
 
-// Called when the game starts or when spawned
-void APlayerUIManager::BeginPlay()
+void APlayerUIManager::UpdateUI(int NewScore, int PlayerIndex)
 {
-	Super::BeginPlay();
-	
+	for (UPlayerUI* ui : PlayerUis)
+	{
+		ui->BP_ScoreUpdated(NewScore, PlayerIndex);
+	}
 }
-

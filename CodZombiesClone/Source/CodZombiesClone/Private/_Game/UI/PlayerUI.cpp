@@ -3,19 +3,40 @@
 
 #include "_Game/UI/PlayerUI.h"
 
-void UPlayerUI::UpdateScore(int NewScore)
+#include "CodZombiesClone.h"
+#include "Kismet/GameplayStatics.h"
+#include "_Game/Managers/PlayerUIManager.h"
+
+void UPlayerUI::UpdateScore(int NewScore, int PlayerIndex)
 {
-	BP_ScoreUpdated(NewScore);
-	
-	// // Tell the manager that this UI has been updated so it can update the other UIs
-	// if (APlayerUIManager* Manager = Cast<APlayerUIManager>(GetWorld()->GetAuthGameMode()))
-	// {
-	// 	Manager->UpdateUI(this);
-	// }
+	if (ManagerRef) ManagerRef->UpdateUI(NewScore, PlayerIndex);
 }
 
-void UPlayerUI::OtherPlayerScoreUpdated(int NewScore, UPlayerUI* CallingUI)
+void UPlayerUI::SetupPlayerUI(int PlayerIndex, APlayerCharacter* Player)
 {
-	// Find the UI element that displays the other player's score and update it
-	// BP_OtherPlayerScoreUpdated(NewScore);
+	PlayerRef = Player;
+	
+	if (AActor* actor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerUIManager::StaticClass()))
+	{
+		ManagerRef = Cast<APlayerUIManager>(actor);
+		if (ManagerRef)
+		{
+			ManagerRef->AddPlayerUI(this, PlayerIndex);
+		}
+		else
+		{
+			UE_LOG(Khaled, Error, TEXT("Found PlayerUIManager but couldn't cast it! | %s"), *GetName());
+		}
+	}
+	else
+	{
+		UE_LOG(Khaled, Error, TEXT("Failed to find PlayerUIManager! | %s"), *GetName());
+	}
+	
+	BP_SetMainPlayer(PlayerIndex);
+}
+
+void UPlayerUI::SetPlayerActive(int PlayerIndex)
+{
+	BP_ActivatePlayer(PlayerIndex);
 }

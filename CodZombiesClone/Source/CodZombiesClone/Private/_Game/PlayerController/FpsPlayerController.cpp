@@ -15,6 +15,11 @@ AFpsPlayerController::AFpsPlayerController()
 	PlayerCameraManagerClass = AFpsPlayerCameraManager::StaticClass();
 }
 
+int AFpsPlayerController::GetPlayerIndex() const
+{
+	return GetLocalPlayer()->GetLocalPlayerIndex();
+}
+
 void AFpsPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -34,8 +39,11 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 		return;
 	}
 	
+	CharacterRef->SetPlayerIndex(GetPlayerIndex());
+	
 	SetupPlayerInputBinds();
 	CharacterRef->CreatePlayerUI(this);
+	
 	
 	OnNewControllerActivated.Broadcast(this);
 	UE_LOG(Khaled, Display, TEXT("Player Inputs Live!"));

@@ -22,6 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GainScore(int Score);
 	
+	void SetPlayerIndex(int Index);
+	
+	int GetCurrentScore() const;
+	
 protected:
 	
 	UPROPERTY(EditAnywhere, Category ="UI")
@@ -35,4 +39,6 @@ protected:
 	
 	UPROPERTY()
 	int CurrentScore;
+	
+	int PlayerIndex;
 };

@@ -18,16 +18,12 @@ public:
 	APlayerUIManager();
 	
 	UFUNCTION()
-	void AddPlayerUI(UPlayerUI* PlayerUI);
+	void AddPlayerUI(UPlayerUI* PlayerUI, int PlayerIndex);
 	
 	UFUNCTION()
-	void UpdateUI(UPlayerUI* CallingUI);
+	void UpdateUI(int NewScore, int PlayerIndex);
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<UPlayerUI*> PlayerUis;
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 };

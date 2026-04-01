@@ -28,6 +28,9 @@ public:
 	
 	AFpsPlayerController();
 	
+	UFUNCTION(BlueprintPure)
+	int GetPlayerIndex() const;
+	
 	FNewControllerAtivatedDelegate OnNewControllerActivated;
 
 protected:
@@ -49,6 +52,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
 	APlayerCharacter* CharacterRef;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Player")
+	int PlayerIndex;
 
 	/** Overrides */
 	virtual void BeginPlay() override;
