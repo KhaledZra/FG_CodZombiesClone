@@ -19,7 +19,7 @@ public:
 	UFUNCTION()
 	void CreatePlayerUI(APlayerController* OwningController);
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void GainScore(int Score);
 	
 protected:
@@ -27,10 +27,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="UI")
 	TSubclassOf<UPlayerUI> PlayerUiClass;
 	
-	UPROPERTY(VisibleAnywhere, Category ="UI")
+	UPROPERTY()
 	UPlayerUI* PlayerUIRef;
 	
-	UPROPERTY(blueprintreadwrite)
+	UPROPERTY(EditAnywhere, Category="Score")
 	int StartingScore;
 	
 	UPROPERTY()

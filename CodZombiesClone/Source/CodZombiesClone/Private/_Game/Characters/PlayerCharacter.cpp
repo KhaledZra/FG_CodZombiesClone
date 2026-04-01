@@ -13,7 +13,7 @@ APlayerCharacter::APlayerCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 	
 	StartingScore = 500;
-	CurrentScore = StartingScore;
+	CurrentScore = 0;
 }
 
 void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
@@ -31,7 +31,7 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
 
 void APlayerCharacter::GainScore(int Score)
 {
-	this->CurrentScore += Score;
-	if (PlayerUIRef) PlayerUIRef->UpdateScore(Score);
+	CurrentScore += Score;
+	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore);
 }
 
