@@ -40,6 +40,8 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 	}
 	
 	CharacterRef->SetPlayerIndex(GetPlayerIndex());
+
+	SetPlayerColor(GetPlayerIndex());
 	
 	SetupPlayerInputBinds();
 	CharacterRef->CreatePlayerUI(this);
@@ -110,4 +112,15 @@ void AFpsPlayerController::OnJumpStarted()
 void AFpsPlayerController::OnJumpCompleted()
 {
 	CharacterRef->DoJumpEnd();
+}
+
+void AFpsPlayerController::SetPlayerColor(int Index)
+{
+	if (CharacterRef == nullptr) return;
+
+	// todo: Kinda Hardcoded from now, maybe get the colors from some sort of data table in future
+	if (Index == 0) CharacterRef->SetPlayerColor(FColor::Red);
+	else if (Index == 1) CharacterRef->SetPlayerColor(FColor::Green);
+	else if (Index == 2) CharacterRef->SetPlayerColor(FColor::Blue);
+	else if (Index == 3) CharacterRef->SetPlayerColor(FColor::Yellow);
 }

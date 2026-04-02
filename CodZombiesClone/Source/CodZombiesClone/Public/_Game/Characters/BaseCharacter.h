@@ -20,6 +20,7 @@ class CODZOMBIESCLONE_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 	
+protected:
 	/** Pawn mesh: first person view (arms; seen only by self) */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	USkeletalMeshComponent* FirstPersonMesh;
@@ -27,8 +28,6 @@ class CODZOMBIESCLONE_API ABaseCharacter : public ACharacter
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FirstPersonCameraComponent;
-	
-protected:
 
 public:
 	// Sets default values for this character's properties

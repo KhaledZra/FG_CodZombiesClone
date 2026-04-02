@@ -26,6 +26,8 @@ public:
 	
 	int GetCurrentScore() const;
 	
+	void SetPlayerColor(FColor Color) const;
+
 protected:
 	
 	UPROPERTY(EditAnywhere, Category ="UI")

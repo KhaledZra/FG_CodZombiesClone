@@ -66,4 +66,5 @@ protected:
 	void OnLookInputTriggered(const FInputActionValue& Value);
 	void OnJumpStarted();
 	void OnJumpCompleted();
+	void SetPlayerColor(int Index);
 };

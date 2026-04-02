@@ -44,3 +44,9 @@ int APlayerCharacter::GetCurrentScore() const
 	return CurrentScore;
 }
 
+void APlayerCharacter::SetPlayerColor(const FColor Color) const
+{
+	GetMesh()->SetColorParameterValueOnMaterials("Paint Tint", Color);
+	FirstPersonMesh->SetColorParameterValueOnMaterials("Paint Tint", Color);
+}
+
