@@ -7,6 +7,8 @@
 #include "_Game/UI/PlayerUI.h"
 #include "PlayerCharacter.generated.h"
 
+class ABaseWeapon;
+
 UCLASS()
 class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter
 {
@@ -43,4 +45,15 @@ protected:
 	int CurrentScore;
 	
 	int PlayerIndex;
+
+	/** Name of the first person mesh weapon socket */
+	UPROPERTY(EditAnywhere, Category ="Weapons")
+	FName FpsWeaponSocket = FName("HandGrip_R");
+
+	/** Name of the third person mesh weapon socket */
+	UPROPERTY(EditAnywhere, Category ="Weapons")
+	FName TpsWeaponSocket = FName("HandGrip_R");
+
+	UPROPERTY(EditAnywhere, Category="Weapons")
+	TObjectPtr<ABaseWeapon> CurrentWeapon;
 };
