@@ -8,14 +8,23 @@ struct FWeaponDataTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	int CurrentMagazineSize = 0;
+	int MagazineSize = 0;
 
 	UPROPERTY(EditAnywhere)
-	int CurrentReserveAmmoCount = 0;
+	int StartingReserveAmmoCount = 0;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> TpsWeaponMesh;
+	
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UAnimMontage> FiringMontage;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
 };

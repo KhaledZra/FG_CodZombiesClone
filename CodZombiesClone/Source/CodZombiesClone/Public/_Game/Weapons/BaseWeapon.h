@@ -12,12 +12,12 @@ UCLASS()
 class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(VisibleAnywhere, Category="Components")
+	TObjectPtr<USkeletalMeshComponent> FpsMesh;
 
 	UPROPERTY(VisibleAnywhere, Category="Components")
-	USkeletalMeshComponent* FpsMesh;
-
-	UPROPERTY(EditAnywhere, Category="Components")
-	USkeletalMeshComponent* TpsMesh;
+	TObjectPtr<USkeletalMeshComponent> TpsMesh;
 
 public:
 	// Sets default values for this actor's properties
@@ -39,15 +39,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	FDataTableRowHandle WeaponData;
 
-	UPROPERTY(EditAnywhere, Category="Animation")
-	UAnimMontage* FiringMontage;
-
-	UPROPERTY(EditAnywhere, Category="Animation")
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> FiringMontage;
+	
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
-
-	UPROPERTY(EditAnywhere, Category="Animation")
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
 	
+	// TScriptInterface if we need it in BP
 	IWeaponUser* WeaponUser;
 
 	UFUNCTION()

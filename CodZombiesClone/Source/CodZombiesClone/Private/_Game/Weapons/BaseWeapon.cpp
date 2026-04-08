@@ -29,6 +29,22 @@ ABaseWeapon::ABaseWeapon()
 	TpsMesh->bOwnerNoSee = true;
 }
 
+void ABaseWeapon::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	// Cache data from the data table
+	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
+	{
+		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
+		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
+		
+		FiringMontage = data->FiringMontage.LoadSynchronous();
+		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
+		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
+	}
+}
+
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -48,7 +64,7 @@ int ABaseWeapon::GetMagazineSize() const
 {
 	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
 	{
-		return data->CurrentMagazineSize;
+		return data->MagazineSize;
 	}
 
 	return 0;
@@ -76,15 +92,4 @@ void ABaseWeapon::StartFiring()
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
 {
 	Destroy();
-}
-
-void ABaseWeapon::OnConstruction(const FTransform& Transform)
-{
-	Super::OnConstruction(Transform);
-
-	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
-	{
-		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
-		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
-	}
 }
