@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "BaseWeapon.generated.h"
 
+class IWeaponUser;
+
 UCLASS()
 class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 {
@@ -20,11 +22,17 @@ class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
-
-	int GetMagazineSize() const;
-
+	
 	UPROPERTY(VisibleAnywhere, Category= "Ammo")
 	int CurrentAmmo;
+	
+	int GetMagazineSize() const;
+
+	UStaticMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
+	UStaticMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
+
+	const TSubclassOf<UAnimInstance>& GetFirstPersonAnimInstanceClass() const { return FirstPersonAnimInstanceClass; }
+	const TSubclassOf<UAnimInstance>& GetThirdPersonAnimInstanceClass() const { return ThirdPersonAnimInstanceClass; }
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
@@ -38,6 +46,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Animation")
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
+	
+	IWeaponUser* WeaponUser;
+
+	UFUNCTION()
+	void OnOwnerDestroyed(AActor* DestroyedActor);
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

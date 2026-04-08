@@ -180,6 +180,9 @@ protected:
 	/** Called from the respawn timer to destroy this character and force the PC to respawn */
 	void OnRespawn();
 
+	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
+	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);
+
 public:
 
 	/** Returns true if the character is dead */

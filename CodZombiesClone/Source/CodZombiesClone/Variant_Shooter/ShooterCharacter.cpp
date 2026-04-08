@@ -182,6 +182,7 @@ void AShooterCharacter::AttachWeaponMeshes(AShooterWeapon* Weapon)
 void AShooterCharacter::PlayFiringMontage(UAnimMontage* Montage)
 {
 	// stub
+	BP_PlayFpsAnimMontage(Montage);
 }
 
 void AShooterCharacter::AddWeaponRecoil(float Recoil)
@@ -242,6 +243,7 @@ void AShooterCharacter::AddWeaponClass(const TSubclassOf<AShooterWeapon>& Weapon
 			// switch to the new weapon
 			CurrentWeapon = AddedWeapon;
 			CurrentWeapon->ActivateWeapon();
+			CurrentWeapon->SetActorHiddenInGame(false);
 		}
 	}
 }

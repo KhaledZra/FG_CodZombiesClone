@@ -3,6 +3,9 @@
 
 #include "_Game/Characters/PlayerCharacter.h"
 
+#include "CodZombiesClone.h"
+#include "_Game/Weapons/BaseWeapon.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -12,6 +15,16 @@ APlayerCharacter::APlayerCharacter()
 	
 	StartingScore = 500;
 	CurrentScore = StartingScore;
+}
+
+void APlayerCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (StarterWeapon)
+	{
+		EquipWeapon(StarterWeapon);
+	}
 }
 
 void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
@@ -48,5 +61,57 @@ void APlayerCharacter::SetPlayerColor(const FColor Color) const
 {
 	GetMesh()->SetColorParameterValueOnMaterials("Paint Tint", Color);
 	FirstPersonMesh->SetColorParameterValueOnMaterials("Paint Tint", Color);
+}
+
+// Right now this is called inside the BaseWeapon BeginPlay
+void APlayerCharacter::AttachWeapon(ABaseWeapon* Weapon)
+{
+	const FAttachmentTransformRules AttachmentRule(EAttachmentRule::SnapToTarget, false);
+	
+	Weapon->AttachToActor(this, AttachmentRule);
+	Weapon->GetFirstPersonMesh()->AttachToComponent(FirstPersonMesh, AttachmentRule, FpsWeaponSocket);
+	Weapon->GetThirdPersonMesh()->AttachToComponent(GetMesh(), AttachmentRule, TpsWeaponSocket);
+}
+
+void APlayerCharacter::OnWeaponActivated(ABaseWeapon* Weapon)
+{
+	// todo: Does nothing
+}
+
+void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
+{
+	// todo: Does nothing
+}
+
+void APlayerCharacter::PlayWeaponFireMontage(UAnimMontage* Montage)
+{
+	// todo: Needs to also trigger the TpsAnimMontage
+	BP_PlayFpsAnimMontage(Montage);
+}
+
+void APlayerCharacter::EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
+{
+	// spawn the new weapon
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = this;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.TransformScaleMethod = ESpawnActorScaleMethod::MultiplyWithRoot;
+
+	ABaseWeapon* AddedWeapon = GetWorld()->SpawnActor<ABaseWeapon>(WeaponClass, GetActorTransform(), SpawnParams);
+
+	if (!AddedWeapon)
+	{
+		UE_LOG(Khaled, Error, TEXT("APlayerCharacter::EquipWeapon - Failed to spawn weapon"));
+		return;
+	}
+
+	// Use the new weapon
+	CurrentWeapon = AddedWeapon;
+	CurrentWeapon->SetActorHiddenInGame(false);
+
+	// set the character mesh AnimInstances
+	GetFirstPersonMesh()->SetAnimInstanceClass(CurrentWeapon->GetFirstPersonAnimInstanceClass());
+	GetMesh()->SetAnimInstanceClass(CurrentWeapon->GetThirdPersonAnimInstanceClass());
 }
 

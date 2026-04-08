@@ -23,6 +23,9 @@ class CODZOMBIESCLONE_API IWeaponUser
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void HoldWeapon(ABaseWeapon* Weapon) = 0;
+	virtual void AttachWeapon(ABaseWeapon* Weapon) = 0;
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) = 0;
+	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) = 0;
+	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) = 0;
+	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) = 0;
 };

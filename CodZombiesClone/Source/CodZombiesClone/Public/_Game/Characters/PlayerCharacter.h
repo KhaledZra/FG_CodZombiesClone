@@ -5,12 +5,13 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "_Game/UI/PlayerUI.h"
+#include "_Game/Weapons/WeaponUser.h"
 #include "PlayerCharacter.generated.h"
 
 class ABaseWeapon;
 
 UCLASS()
-class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter
+class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter, public IWeaponUser
 {
 	GENERATED_BODY()
 
@@ -56,4 +57,19 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Weapons")
 	TObjectPtr<ABaseWeapon> CurrentWeapon;
+
+	UPROPERTY(EditAnywhere, Category="Weapons")
+	TSubclassOf<ABaseWeapon> StarterWeapon;
+
+	/** IWeaponUser implementation */
+	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
+	virtual void OnWeaponActivated(ABaseWeapon* Weapon) override;
+	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
+	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) override;
+	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
+	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);
+
+	virtual void BeginPlay() override;
 };
