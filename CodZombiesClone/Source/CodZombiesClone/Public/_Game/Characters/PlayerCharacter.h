@@ -30,6 +30,8 @@ public:
 	int GetCurrentScore() const;
 	
 	void SetPlayerColor(FColor Color) const;
+	
+	void DoLeftFireStarted();
 
 protected:
 	
@@ -67,6 +69,7 @@ protected:
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
 	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) override;
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
+	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);

@@ -4,6 +4,7 @@
 #include "_Game/Characters/PlayerCharacter.h"
 
 #include "CodZombiesClone.h"
+#include "Camera/CameraComponent.h"
 #include "_Game/Weapons/BaseWeapon.h"
 
 
@@ -63,6 +64,15 @@ void APlayerCharacter::SetPlayerColor(const FColor Color) const
 	FirstPersonMesh->SetColorParameterValueOnMaterials("Paint Tint", Color);
 }
 
+void APlayerCharacter::DoLeftFireStarted()
+{
+	// Holding weapon check
+	if (!CurrentWeapon) return;
+	
+	//todo: work in progress should fire from weapon
+	CurrentWeapon->StartFiring();
+}
+
 // Right now this is called inside the BaseWeapon BeginPlay
 void APlayerCharacter::AttachWeapon(ABaseWeapon* Weapon)
 {
@@ -113,5 +123,11 @@ void APlayerCharacter::EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
 	// set the character mesh AnimInstances
 	GetFirstPersonMesh()->SetAnimInstanceClass(CurrentWeapon->GetFirstPersonAnimInstanceClass());
 	GetMesh()->SetAnimInstanceClass(CurrentWeapon->GetThirdPersonAnimInstanceClass());
+}
+
+void APlayerCharacter::GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection)
+{
+	OutStartLocation = FirstPersonCameraComponent->GetComponentLocation();
+	OutWorldDirection = FirstPersonCameraComponent->GetForwardVector();
 }
 

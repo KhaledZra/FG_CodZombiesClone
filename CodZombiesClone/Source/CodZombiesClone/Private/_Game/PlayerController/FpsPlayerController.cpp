@@ -87,6 +87,10 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 	eic->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFpsPlayerController::OnLookInputTriggered);
 	eic->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AFpsPlayerController::OnLookInputTriggered);
 	
+	// Left Fire Input
+	eic->BindAction(FireAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnLeftFireStarted);
+	eic->BindAction(FireAction, ETriggerEvent::Completed, this, &AFpsPlayerController::OnLeftFireCompleted);
+	
 	SetupInputComponent();
 }
 
@@ -112,6 +116,16 @@ void AFpsPlayerController::OnJumpStarted()
 void AFpsPlayerController::OnJumpCompleted()
 {
 	CharacterRef->DoJumpEnd();
+}
+
+void AFpsPlayerController::OnLeftFireStarted()
+{
+	CharacterRef->DoLeftFireStarted();
+}
+
+void AFpsPlayerController::OnLeftFireCompleted()
+{
+	// rn does nothing i guess. 
 }
 
 void AFpsPlayerController::SetPlayerColor(int Index)

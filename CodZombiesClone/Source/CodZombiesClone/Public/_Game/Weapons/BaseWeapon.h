@@ -27,6 +27,7 @@ public:
 	int CurrentAmmo;
 	
 	int GetMagazineSize() const;
+	void StartFiring();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }

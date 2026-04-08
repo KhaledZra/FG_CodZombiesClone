@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	UInputAction* MouseLookAction;
 	
+	UPROPERTY(EditAnywhere, Category ="Input")
+	UInputAction* FireAction;
+	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
 	APlayerCharacter* CharacterRef;
 	
@@ -66,5 +69,7 @@ protected:
 	void OnLookInputTriggered(const FInputActionValue& Value);
 	void OnJumpStarted();
 	void OnJumpCompleted();
+	void OnLeftFireStarted();
+	void OnLeftFireCompleted();
 	void SetPlayerColor(int Index);
 };

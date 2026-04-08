@@ -3,6 +3,7 @@
 
 #include "_Game/Weapons/BaseWeapon.h"
 
+#include "CodZombiesClone.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
 #include "_Game/Weapons/WeaponUser.h"
 
@@ -51,6 +52,25 @@ int ABaseWeapon::GetMagazineSize() const
 	}
 
 	return 0;
+}
+
+void ABaseWeapon::StartFiring()
+{
+	// todo: need to implement firing logic here, but for now this is just a placeholder to test the weapon system.
+	
+	FVector startLocation = FVector::ZeroVector;
+	FVector direction = FVector::ZeroVector;
+	FVector endLocation = FVector::ZeroVector;
+	
+	WeaponUser->GetTargetAimLocation(startLocation, direction);
+	endLocation = startLocation + (direction * 100.0f);
+	
+	// Visual stuff
+	WeaponUser->PlayWeaponFireMontage(FiringMontage);
+	
+	// Debug stuff
+	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());
+	DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 2.0f, 0, 1.0f);
 }
 
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
