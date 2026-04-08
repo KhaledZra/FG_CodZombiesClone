@@ -39,7 +39,7 @@ protected:
 	TSubclassOf<UPlayerUI> PlayerUiClass;
 	
 	UPROPERTY()
-	UPlayerUI* PlayerUIRef;
+	TObjectPtr<UPlayerUI> PlayerUIRef;
 	
 	UPROPERTY(EditAnywhere, Category="Score")
 	int StartingScore;

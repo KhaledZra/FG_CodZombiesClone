@@ -25,5 +25,5 @@ public:
 	
 protected:
 	UPROPERTY(BlueprintReadWrite)
-	TArray<UPlayerUI*> PlayerUis;
+	TArray<TObjectPtr<UPlayerUI>> PlayerUis;
 };

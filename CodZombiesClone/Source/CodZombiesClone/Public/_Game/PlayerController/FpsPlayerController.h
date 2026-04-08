@@ -36,25 +36,25 @@ public:
 protected:
 	
 	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
-	TArray<UInputMappingContext*> DefaultMappingContexts;
+	TArray<TObjectPtr<UInputMappingContext>> DefaultMappingContexts;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* JumpAction;
+	TObjectPtr<UInputAction> JumpAction;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* MoveAction;
+	TObjectPtr<UInputAction> MoveAction;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* LookAction;
+	TObjectPtr<UInputAction> LookAction;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* MouseLookAction;
+	TObjectPtr<UInputAction> MouseLookAction;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
-	UInputAction* FireAction;
+	TObjectPtr<UInputAction> FireAction;
 	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
-	APlayerCharacter* CharacterRef;
+	TObjectPtr<APlayerCharacter> CharacterRef;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Player")
 	int PlayerIndex;

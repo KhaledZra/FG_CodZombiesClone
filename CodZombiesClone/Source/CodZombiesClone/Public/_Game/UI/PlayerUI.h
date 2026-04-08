@@ -18,10 +18,10 @@ class CODZOMBIESCLONE_API UPlayerUI : public UUserWidget
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Manager")
-	APlayerUIManager* ManagerRef;
+	TObjectPtr<APlayerUIManager> ManagerRef;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Manager")
-	APlayerCharacter* PlayerRef;
+	TObjectPtr<APlayerCharacter> PlayerRef;
 	
 	UFUNCTION()
 	void UpdateScore(int NewScore, int PlayerIndex);
