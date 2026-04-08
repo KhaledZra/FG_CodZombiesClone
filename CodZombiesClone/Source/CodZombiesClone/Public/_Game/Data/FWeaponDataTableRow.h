@@ -14,8 +14,8 @@ struct FWeaponDataTableRow : public FTableRowBase
 	int CurrentReserveAmmoCount = 0;
 
 	UPROPERTY(EditAnywhere)
-	TSoftObjectPtr<UStaticMesh> FpsWeaponMesh;
+	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;
 
 	UPROPERTY(EditAnywhere)
-	TSoftObjectPtr<UStaticMesh> TpsWeaponMesh;
+	TSoftObjectPtr<USkeletalMesh> TpsWeaponMesh;
 };

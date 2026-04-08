@@ -14,14 +14,14 @@ ABaseWeapon::ABaseWeapon()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Fps Mesh
-	FpsMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FpsMesh"));
+	FpsMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FpsMesh"));
 	FpsMesh->SetupAttachment(RootComponent);
 	FpsMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 	FpsMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::FirstPerson);
 	FpsMesh->bOnlyOwnerSee = true;
 
 	// Tps Mesh
-	TpsMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TpsMesh"));
+	TpsMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("TpsMesh"));
 	TpsMesh->SetupAttachment(RootComponent);
 	TpsMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 	TpsMesh->SetFirstPersonPrimitiveType(EFirstPersonPrimitiveType::WorldSpaceRepresentation);
@@ -64,7 +64,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 
 	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
 	{
-		FpsMesh->SetStaticMesh(data->FpsWeaponMesh.LoadSynchronous());
-		TpsMesh->SetStaticMesh(data->FpsWeaponMesh.LoadSynchronous());
+		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
+		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
 	}
 }

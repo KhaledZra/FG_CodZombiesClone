@@ -14,10 +14,10 @@ class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere, Category="Components")
-	UStaticMeshComponent* FpsMesh;
+	USkeletalMeshComponent* FpsMesh;
 
 	UPROPERTY(EditAnywhere, Category="Components")
-	UStaticMeshComponent* TpsMesh;
+	USkeletalMeshComponent* TpsMesh;
 
 public:
 	// Sets default values for this actor's properties
@@ -28,8 +28,8 @@ public:
 	
 	int GetMagazineSize() const;
 
-	UStaticMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
-	UStaticMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
+	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
+	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
 
 	const TSubclassOf<UAnimInstance>& GetFirstPersonAnimInstanceClass() const { return FirstPersonAnimInstanceClass; }
 	const TSubclassOf<UAnimInstance>& GetThirdPersonAnimInstanceClass() const { return ThirdPersonAnimInstanceClass; }
