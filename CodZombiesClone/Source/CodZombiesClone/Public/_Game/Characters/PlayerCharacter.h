@@ -66,6 +66,7 @@ protected:
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
+	virtual void AddRecoil(float RecoilStrength) override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);

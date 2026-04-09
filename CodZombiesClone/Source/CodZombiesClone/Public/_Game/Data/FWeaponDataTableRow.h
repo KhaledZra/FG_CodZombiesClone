@@ -12,6 +12,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere)
 	int StartingReserveAmmoCount = 0;
+	
+	UPROPERTY(EditAnywhere)
+	float RecoilStrength = 0;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;

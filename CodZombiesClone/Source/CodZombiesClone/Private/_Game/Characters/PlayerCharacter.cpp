@@ -134,17 +134,11 @@ void APlayerCharacter::UpdateWeaponHud(int CurrentAmmo, int MagazineSize)
 	if (PlayerUIRef)
 	{
 		PlayerUIRef->BP_UpdateBulletCounter(MagazineSize, CurrentAmmo);
-		
-		// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
-		// 	&PlayerUIRef,
-		// 	*this->GetName());
-		UE_LOG(Khaled, Warning, TEXT("Updated Ammo for %s"), *GetName());
-		// Ammo logs
-		UE_LOG(Khaled, Warning, TEXT("Current Ammo: %d | Magazine Size: %d"), CurrentAmmo, MagazineSize);
 	}
-	else
-	{
-		UE_LOG(Khaled, Warning, TEXT("UI ref Missing for PlayerCharacter %s"), *GetName());
-	}
+}
+
+void APlayerCharacter::AddRecoil(float RecoilStrength)
+{
+	AddControllerPitchInput(-RecoilStrength);
 }
 

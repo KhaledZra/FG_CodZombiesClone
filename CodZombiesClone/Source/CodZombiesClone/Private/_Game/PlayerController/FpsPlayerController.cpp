@@ -95,7 +95,7 @@ void AFpsPlayerController::OnMoveInputTriggered(const FInputActionValue& Value)
 	FVector2D MovementVector = Value.Get<FVector2D>();
 	MovementVector.Normalize();
 	// LOG VALUE
-	UE_LOG(LogCodZombiesClone, Log, TEXT("%s"), *MovementVector.ToString());
+	//UE_LOG(LogCodZombiesClone, Log, TEXT("%s"), *MovementVector.ToString());
 	CharacterRef->DoMove(MovementVector.X, MovementVector.Y);
 }
 

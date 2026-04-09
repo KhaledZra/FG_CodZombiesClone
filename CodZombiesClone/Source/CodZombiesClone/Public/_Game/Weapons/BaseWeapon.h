@@ -23,11 +23,14 @@ public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
 	
-	UPROPERTY(VisibleAnywhere, Category= "Ammo")
+	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int CurrentAmmo;
 	
-	UPROPERTY(VisibleAnywhere, Category= "Ammo")
+	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int MagazineSize;
+	
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	float RecoilStrength;
 	
 	void StartFiring();
 

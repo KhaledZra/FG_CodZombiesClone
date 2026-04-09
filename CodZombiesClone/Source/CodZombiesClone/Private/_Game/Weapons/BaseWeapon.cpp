@@ -44,6 +44,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
 		
 		MagazineSize = data->MagazineSize;
+		RecoilStrength = data->RecoilStrength;
 	}
 }
 
@@ -89,6 +90,9 @@ void ABaseWeapon::StartFiring()
 	
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	
+	// Recoi
+	WeaponUser->AddRecoil(RecoilStrength);
 	
 	// Debug stuff
 	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());
