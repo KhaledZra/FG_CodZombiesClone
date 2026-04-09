@@ -69,6 +69,14 @@ void ABaseWeapon::StartFiring()
 {
 	// todo: need to implement firing logic here, but for now this is just a placeholder to test the weapon system.
 	
+	// Reload handling - Pretty shit but it works for now.
+	if (CurrentAmmo <= 0)
+	{
+		CurrentAmmo = MagazineSize;
+		WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+		return;
+	}
+	
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;
 	FVector endLocation = FVector::ZeroVector;
