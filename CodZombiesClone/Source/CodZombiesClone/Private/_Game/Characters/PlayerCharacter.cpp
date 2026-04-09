@@ -18,27 +18,17 @@ APlayerCharacter::APlayerCharacter()
 	CurrentScore = StartingScore;
 }
 
-void APlayerCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (StarterWeapon)
-	{
-		EquipWeapon(StarterWeapon);
-	}
-}
-
-void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController)
+void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex)
 {
 	PlayerUIRef = CreateWidget<UPlayerUI>(OwningController, PlayerUiClass);
 	ensure(PlayerUIRef != nullptr);
 	PlayerUIRef->AddToPlayerScreen();
 	
-	PlayerUIRef->SetupPlayerUI(PlayerIndex, this);
-	PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+	PlayerUIRef->SetupPlayerUI(CurrentPlayerIndex, this);
+	PlayerUIRef->UpdateScore(CurrentScore, CurrentPlayerIndex);
 	
 	// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
-	// 	PlayerUIRef,
+	// 	&PlayerUIRef,
 	// 	*this->GetName());
 }
 
@@ -71,6 +61,14 @@ void APlayerCharacter::DoLeftFireStarted()
 	
 	//todo: work in progress should fire from weapon
 	CurrentWeapon->StartFiring();
+}
+
+void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex)
+{
+	CreatePlayerUI(OwningController, CurrentPlayerIndex);
+	SetPlayerIndex(CurrentPlayerIndex);
+	SetPlayerColor(PlayerColor);
+	if (StarterWeapon) EquipWeapon(StarterWeapon);
 }
 
 // Right now this is called inside the BaseWeapon BeginPlay
@@ -129,5 +127,24 @@ void APlayerCharacter::GetTargetAimLocation(FVector& OutStartLocation, FVector& 
 {
 	OutStartLocation = FirstPersonCameraComponent->GetComponentLocation();
 	OutWorldDirection = FirstPersonCameraComponent->GetForwardVector();
+}
+
+void APlayerCharacter::UpdateWeaponHud(int CurrentAmmo, int MagazineSize)
+{
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_UpdateBulletCounter(MagazineSize, CurrentAmmo);
+		
+		// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
+		// 	&PlayerUIRef,
+		// 	*this->GetName());
+		UE_LOG(Khaled, Warning, TEXT("Updated Ammo for %s"), *GetName());
+		// Ammo logs
+		UE_LOG(Khaled, Warning, TEXT("Current Ammo: %d | Magazine Size: %d"), CurrentAmmo, MagazineSize);
+	}
+	else
+	{
+		UE_LOG(Khaled, Warning, TEXT("UI ref Missing for PlayerCharacter %s"), *GetName());
+	}
 }
 

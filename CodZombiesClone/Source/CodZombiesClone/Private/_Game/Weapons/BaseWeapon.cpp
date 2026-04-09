@@ -42,6 +42,8 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		FiringMontage = data->FiringMontage.LoadSynchronous();
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
+		
+		MagazineSize = data->MagazineSize;
 	}
 }
 
@@ -53,21 +55,14 @@ void ABaseWeapon::BeginPlay()
 	GetOwner()->OnDestroyed.AddDynamic(this, &ABaseWeapon::OnOwnerDestroyed);
 
 	// Always starts fully reloaded
-	CurrentAmmo = GetMagazineSize();
+	CurrentAmmo = MagazineSize;
 	
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
 	WeaponUser->AttachWeapon(this);
-}
-
-int ABaseWeapon::GetMagazineSize() const
-{
-	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
-	{
-		return data->MagazineSize;
-	}
-
-	return 0;
+	
+	// Update UI
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 }
 
 void ABaseWeapon::StartFiring()
@@ -83,6 +78,9 @@ void ABaseWeapon::StartFiring()
 	
 	// Visual stuff
 	WeaponUser->PlayWeaponFireMontage(FiringMontage);
+	
+	CurrentAmmo--;
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 	
 	// Debug stuff
 	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());

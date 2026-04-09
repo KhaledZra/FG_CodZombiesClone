@@ -26,7 +26,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category= "Ammo")
 	int CurrentAmmo;
 	
-	int GetMagazineSize() const;
+	UPROPERTY(VisibleAnywhere, Category= "Ammo")
+	int MagazineSize;
+	
 	void StartFiring();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }

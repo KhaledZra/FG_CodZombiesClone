@@ -30,6 +30,7 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	if (!IsLocalController()) return;
+	SetupPlayerInputBinds();
 	
 	CharacterRef = Cast<APlayerCharacter>(InPawn);
 	ensure(CharacterRef != nullptr);
@@ -39,13 +40,8 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 		return;
 	}
 	
-	CharacterRef->SetPlayerIndex(GetPlayerIndex());
-
-	SetPlayerColor(GetPlayerIndex());
-	
-	SetupPlayerInputBinds();
-	CharacterRef->CreatePlayerUI(this);
-	
+	int playerIndex = GetPlayerIndex();
+	CharacterRef->SetupPlayer(this, GetPlayerColor(playerIndex), playerIndex);
 	
 	OnNewControllerActivated.Broadcast(this);
 	UE_LOG(Khaled, Display, TEXT("Player Inputs Live!"));
@@ -97,7 +93,9 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 void AFpsPlayerController::OnMoveInputTriggered(const FInputActionValue& Value)
 {
 	FVector2D MovementVector = Value.Get<FVector2D>();
-	
+	MovementVector.Normalize();
+	// LOG VALUE
+	UE_LOG(LogCodZombiesClone, Log, TEXT("%s"), *MovementVector.ToString());
 	CharacterRef->DoMove(MovementVector.X, MovementVector.Y);
 }
 
@@ -128,13 +126,13 @@ void AFpsPlayerController::OnLeftFireCompleted()
 	// rn does nothing i guess. 
 }
 
-void AFpsPlayerController::SetPlayerColor(int Index)
+FColor AFpsPlayerController::GetPlayerColor(int Index)
 {
-	if (CharacterRef == nullptr) return;
-
 	// todo: Kinda Hardcoded from now, maybe get the colors from some sort of data table in future
-	if (Index == 0) CharacterRef->SetPlayerColor(FColor::Red);
-	else if (Index == 1) CharacterRef->SetPlayerColor(FColor::Green);
-	else if (Index == 2) CharacterRef->SetPlayerColor(FColor::Blue);
-	else if (Index == 3) CharacterRef->SetPlayerColor(FColor::Yellow);
+	if (Index == 0) return FColor::Red;
+	if (Index == 1) return FColor::Green;
+	if (Index == 2) return FColor::Blue;
+	if (Index == 3) return FColor::Yellow;
+	
+	return FColor::White;
 }

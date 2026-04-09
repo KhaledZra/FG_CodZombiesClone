@@ -43,4 +43,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta = (DisplayName = "Activates the given Index"))
 	void BP_ActivatePlayer(int PlayerIndex);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "UpdateBulletCounter"))
+	void BP_UpdateBulletCounter(int MagazineSize, int BulletCount);
 };

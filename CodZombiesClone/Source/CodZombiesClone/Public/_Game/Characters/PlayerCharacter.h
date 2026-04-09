@@ -19,19 +19,14 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 	
-	UFUNCTION()
-	void CreatePlayerUI(APlayerController* OwningController);
-	
 	UFUNCTION(BlueprintCallable)
 	void GainScore(int Score);
 	
-	void SetPlayerIndex(int Index);
-	
 	int GetCurrentScore() const;
 	
-	void SetPlayerColor(FColor Color) const;
-	
 	void DoLeftFireStarted();
+	
+	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);
 
 protected:
 	
@@ -70,9 +65,12 @@ protected:
 	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) override;
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
+	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);
-
-	virtual void BeginPlay() override;
+	
+	void CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex);
+	void SetPlayerIndex(int Index);
+	void SetPlayerColor(FColor Color) const;
 };

@@ -71,5 +71,5 @@ protected:
 	void OnJumpCompleted();
 	void OnLeftFireStarted();
 	void OnLeftFireCompleted();
-	void SetPlayerColor(int Index);
+	FColor GetPlayerColor(int Index);
 };

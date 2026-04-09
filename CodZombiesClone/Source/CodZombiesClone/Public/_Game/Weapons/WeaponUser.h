@@ -29,4 +29,5 @@ public:
 	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) = 0;
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) = 0;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) = 0;
+	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) = 0;
 };
