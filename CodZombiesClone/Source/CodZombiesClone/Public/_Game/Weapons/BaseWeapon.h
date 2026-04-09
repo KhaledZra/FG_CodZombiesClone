@@ -32,6 +32,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float RecoilStrength;
 	
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	float FireRate;
+	
 	void StartFiring();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
@@ -52,6 +55,9 @@ protected:
 	
 	// TScriptInterface if we need it in BP
 	IWeaponUser* WeaponUser;
+	
+	bool bFireCooldownActive = false;
+	FTimerHandle FireCooldownTimer;
 
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);

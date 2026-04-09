@@ -38,13 +38,14 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 	{
 		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
 		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
-		
+
 		FiringMontage = data->FiringMontage.LoadSynchronous();
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
-		
+
 		MagazineSize = data->MagazineSize;
 		RecoilStrength = data->RecoilStrength;
+		FireRate = data->FireRate;
 	}
 }
 
@@ -57,11 +58,11 @@ void ABaseWeapon::BeginPlay()
 
 	// Always starts fully reloaded
 	CurrentAmmo = MagazineSize;
-	
+
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
 	WeaponUser->AttachWeapon(this);
-	
+
 	// Update UI
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 }
@@ -69,7 +70,7 @@ void ABaseWeapon::BeginPlay()
 void ABaseWeapon::StartFiring()
 {
 	// todo: need to implement firing logic here, but for now this is just a placeholder to test the weapon system.
-	
+	if (bFireCooldownActive) return;
 	// Reload handling - Pretty shit but it works for now.
 	if (CurrentAmmo <= 0)
 	{
@@ -77,23 +78,28 @@ void ABaseWeapon::StartFiring()
 		WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 		return;
 	}
-	
+
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;
 	FVector endLocation = FVector::ZeroVector;
-	
+
 	WeaponUser->GetTargetAimLocation(startLocation, direction);
 	endLocation = startLocation + (direction * 100.0f);
-	
+
 	// Visual stuff
 	WeaponUser->PlayWeaponFireMontage(FiringMontage);
-	
+
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
-	
+
 	// Recoi
 	WeaponUser->AddRecoil(RecoilStrength);
-	
+
+	bFireCooldownActive = true;
+	GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
+	                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
+	                                       FireRate, false);
+
 	// Debug stuff
 	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());
 	DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 2.0f, 0, 1.0f);
