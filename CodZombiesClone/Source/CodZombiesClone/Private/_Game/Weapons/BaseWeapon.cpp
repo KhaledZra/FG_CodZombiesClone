@@ -46,6 +46,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		MagazineSize = data->MagazineSize;
 		RecoilStrength = data->RecoilStrength;
 		FireRate = data->FireRate;
+		BulletRange = data->BulletRange;
 	}
 }
 
@@ -84,7 +85,7 @@ void ABaseWeapon::StartFiring()
 	FVector endLocation = FVector::ZeroVector;
 
 	WeaponUser->GetTargetAimLocation(startLocation, direction);
-	endLocation = startLocation + (direction * 100.0f);
+	endLocation = startLocation + (direction * BulletRange);
 
 	// Visual stuff
 	WeaponUser->PlayWeaponFireMontage(FiringMontage);
@@ -92,13 +93,16 @@ void ABaseWeapon::StartFiring()
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 
-	// Recoi
+	// Recoil
 	WeaponUser->AddRecoil(RecoilStrength);
-
-	bFireCooldownActive = true;
-	GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
-	                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
-	                                       FireRate, false);
+	
+	if (!FMath::IsNearlyEqual(FireRate, 0.0f))
+	{
+		bFireCooldownActive = true;
+		GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
+									   FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
+									   FireRate, false);
+	}
 
 	// Debug stuff
 	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());

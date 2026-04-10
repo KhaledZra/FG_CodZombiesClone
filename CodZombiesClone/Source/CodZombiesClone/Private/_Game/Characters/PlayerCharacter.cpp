@@ -5,6 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "Camera/CameraComponent.h"
+#include "_Game/Components/HealthComponent.h"
 #include "_Game/Weapons/BaseWeapon.h"
 
 
@@ -36,6 +37,9 @@ void APlayerCharacter::GainScore(int Score)
 {
 	CurrentScore += Score;
 	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+
+	// todo: testing, remove this later
+	HealthComponent->TakeDamage(25);
 }
 
 void APlayerCharacter::SetPlayerIndex(int Index)

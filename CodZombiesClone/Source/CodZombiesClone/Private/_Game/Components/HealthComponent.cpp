@@ -51,6 +51,8 @@ void UHealthComponent::Heal(const int& HealAmount)
 void UHealthComponent::TakeDamage(const int& DamageAmount)
 {
 	CurrentHealth = FMath::Max(CurrentHealth - DamageAmount, 0);
+
+	if (CurrentHealth <= 0) Die();
 }
 
 void UHealthComponent::Die()

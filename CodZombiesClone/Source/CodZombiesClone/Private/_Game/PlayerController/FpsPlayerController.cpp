@@ -23,11 +23,16 @@ int AFpsPlayerController::GetPlayerIndex() const
 void AFpsPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 }
 
 void AFpsPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	if (bPossessHasHappened) return;
+	bPossessHasHappened = true;
 
 	if (!IsLocalController()) return;
 	SetupPlayerInputBinds();

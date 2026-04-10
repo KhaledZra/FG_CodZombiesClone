@@ -34,6 +34,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float FireRate;
+
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	float BulletRange;
 	
 	void StartFiring();
 

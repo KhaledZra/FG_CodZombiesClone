@@ -59,6 +59,8 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Player")
 	int PlayerIndex;
 
+	bool bPossessHasHappened = false;
+
 	/** Overrides */
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

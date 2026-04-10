@@ -20,6 +20,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 	float FireRate = 0;
 
 	UPROPERTY(EditAnywhere)
+	float BulletRange = 0;
+
+	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;
 
 	UPROPERTY(EditAnywhere)
