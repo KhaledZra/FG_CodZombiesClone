@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "_Game/UI/PlayerUI.h"
-#include "_Game/Weapons/WeaponUser.h"
+#include "_Game/Interfaces/WeaponUser.h"
 #include "PlayerCharacter.generated.h"
 
 class ABaseWeapon;

@@ -5,7 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
-#include "_Game/Weapons/WeaponUser.h"
+#include "_Game/Interfaces/WeaponUser.h"
 
 
 // Sets default values
