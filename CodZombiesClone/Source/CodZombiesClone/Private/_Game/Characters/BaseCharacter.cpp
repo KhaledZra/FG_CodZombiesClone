@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "_Game/Components/HealthComponent.h"
 
 
 // Sets default values
@@ -31,6 +32,9 @@ ABaseCharacter::ABaseCharacter()
 	FirstPersonCameraComponent->SetEnableFirstPersonScale(true);
 	FirstPersonCameraComponent->SetFirstPersonFieldOfView(70.0f);
 	FirstPersonCameraComponent->SetFirstPersonScale(0.6f);
+
+	// Create the health component
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
 
 	// configure the character comps
 	GetMesh()->SetOwnerNoSee(true);
@@ -68,5 +72,10 @@ void ABaseCharacter::DoJumpStart()
 void ABaseCharacter::DoJumpEnd()
 {
 	StopJumping();
+}
+
+void ABaseCharacter::OnDeath()
+{
+	Destroy();
 }
 

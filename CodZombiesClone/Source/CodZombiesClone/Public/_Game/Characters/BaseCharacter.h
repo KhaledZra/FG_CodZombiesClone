@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "_Game/Interfaces/HealthUser.h"
 #include "BaseCharacter.generated.h"
 
+class UHealthComponent;
 class UInputComponent;
 class USkeletalMeshComponent;
 class UCameraComponent;
@@ -16,7 +18,7 @@ struct FInputActionValue;
  *  The main base character
  */
 UCLASS(abstract)
-class CODZOMBIESCLONE_API ABaseCharacter : public ACharacter
+class CODZOMBIESCLONE_API ABaseCharacter : public ACharacter, public IHealthUser
 {
 	GENERATED_BODY()
 	
@@ -28,6 +30,9 @@ protected:
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> FirstPersonCameraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UHealthComponent> HealthComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -50,4 +55,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
+
+	virtual void OnDeath() override;
 };
