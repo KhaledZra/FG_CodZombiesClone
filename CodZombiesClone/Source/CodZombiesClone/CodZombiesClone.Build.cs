@@ -24,13 +24,7 @@ public class CodZombiesClone : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[] { });
 
 		PublicIncludePaths.AddRange(new string[] {
-			"CodZombiesClone",
-			"CodZombiesClone/Variant_Horror",
-			"CodZombiesClone/Variant_Horror/UI",
-			"CodZombiesClone/Variant_Shooter",
-			"CodZombiesClone/Variant_Shooter/AI",
-			"CodZombiesClone/Variant_Shooter/UI",
-			"CodZombiesClone/Variant_Shooter/Weapons"
+			"CodZombiesClone"
 		});
 
 		// Uncomment if you are using Slate UI
