@@ -71,6 +71,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> EquippedMontage;
 	
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> DryFireMontage;
+	
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
 	

@@ -59,6 +59,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Weapons")
 	TSubclassOf<ABaseWeapon> StarterWeapon;
+	
+	FTimerHandle EquipWeaponVisibilityTimer;
 
 	/** IWeaponUser implementation */
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;

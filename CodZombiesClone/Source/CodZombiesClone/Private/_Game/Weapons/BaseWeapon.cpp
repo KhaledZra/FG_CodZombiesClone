@@ -45,6 +45,8 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		FiringMontage = data->FiringMontage.LoadSynchronous();
 		ReloadMontage = data->ReloadMontage.LoadSynchronous();
 		EquippedMontage = data->EquippedMontage.LoadSynchronous();
+		DryFireMontage = data->DryFireMontage.LoadSynchronous(); // Not used cause it looks wonky.
+		
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
 
@@ -61,6 +63,8 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	SetActorHiddenInGame(true);
 
 	// Ensure weapon destroys with owner
 	GetOwner()->OnDestroyed.AddDynamic(this, &ABaseWeapon::OnOwnerDestroyed);
@@ -82,7 +86,6 @@ void ABaseWeapon::StartFiring()
 {
 	if (bFireCooldownActive) return;
 	if (bIsReloading) return;
-	// Reload handling - Pretty shit but it works for now.
 	if (CurrentAmmo <= 0)
 	{
 		Reload();
@@ -135,8 +138,8 @@ void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
 
 void ABaseWeapon::Fire()
 {
-	if (CurrentAmmo <= 0) return; // Since autofire keeps running this function
 	if (bIsReloading) return;
+	if (CurrentAmmo <= 0) return;
 	
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;

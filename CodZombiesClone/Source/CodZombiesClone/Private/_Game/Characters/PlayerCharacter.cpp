@@ -122,8 +122,12 @@ void APlayerCharacter::OnWeaponActivated(ABaseWeapon* Weapon)
 	
 	// Use the new weapon
 	Weapon->ActivateWeapon();
-	Weapon->SetActorHiddenInGame(false);
+	
 	CurrentWeapon = Weapon;
+	// Mini delay to make it look better when equipping, super hacky but w/e
+	GetWorld()->GetTimerManager().SetTimer(EquipWeaponVisibilityTimer,
+								   FTimerDelegate::CreateLambda([this] { CurrentWeapon->SetActorHiddenInGame(false); }),
+								   0.25, false);
 }
 
 void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
