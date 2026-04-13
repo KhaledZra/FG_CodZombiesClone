@@ -26,7 +26,7 @@ public:
 	virtual void AttachWeapon(ABaseWeapon* Weapon) = 0;
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) = 0;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) = 0;
-	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) = 0;
+	virtual void PlayWeaponMontage(UAnimMontage* Montage) = 0;
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) = 0;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) = 0;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) = 0;

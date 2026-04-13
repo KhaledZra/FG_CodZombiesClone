@@ -43,6 +43,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
 
 		FiringMontage = data->FiringMontage.LoadSynchronous();
+		ReloadMontage = data->ReloadMontage.LoadSynchronous();
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
 
@@ -52,6 +53,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		BulletRange = data->BulletRange;
 		GunDamage = data->GunDamage;
 		bAutoFire = data->bAutoFire;
+		ReloadLength = data->ReloadLength;
 	}
 }
 
@@ -76,6 +78,7 @@ void ABaseWeapon::BeginPlay()
 void ABaseWeapon::StartFiring()
 {
 	if (bFireCooldownActive) return;
+	if (bIsReloading) return;
 	// Reload handling - Pretty shit but it works for now.
 	if (CurrentAmmo <= 0)
 	{
@@ -106,9 +109,15 @@ void ABaseWeapon::StopFiring()
 void ABaseWeapon::Reload()
 {
 	if (CurrentAmmo == MagazineSize) return;
-
-	CurrentAmmo = MagazineSize;
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	if (bIsReloading) return;
+	
+	UE_LOG(Khaled, Log, TEXT("Reload Started"));
+	bIsReloading = true;
+	GetWorld()->GetTimerManager().SetTimer(ReloadTimer,
+										   this, &ABaseWeapon::OnReloadComplete,
+										   ReloadLength, false);
+	
+	WeaponUser->PlayWeaponMontage(ReloadMontage);
 }
 
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
@@ -119,6 +128,7 @@ void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
 void ABaseWeapon::Fire()
 {
 	if (CurrentAmmo <= 0) return; // Since autofire keeps running this function
+	if (bIsReloading) return;
 	
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;
@@ -128,7 +138,7 @@ void ABaseWeapon::Fire()
 	endLocation = startLocation + (direction * BulletRange);
 
 	// Visual stuff
-	WeaponUser->PlayWeaponFireMontage(FiringMontage);
+	WeaponUser->PlayWeaponMontage(FiringMontage);
 
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
@@ -172,4 +182,11 @@ void ABaseWeapon::Fire()
 		                                       this, &ABaseWeapon::Fire,
 		                                       fireRate, false);
 	}
+}
+
+void ABaseWeapon::OnReloadComplete()
+{
+	CurrentAmmo = MagazineSize;
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	bIsReloading = false;
 }

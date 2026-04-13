@@ -30,8 +30,8 @@ ABaseCharacter::ABaseCharacter()
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
 	FirstPersonCameraComponent->SetEnableFirstPersonFieldOfView(true);
 	FirstPersonCameraComponent->SetEnableFirstPersonScale(true);
-	FirstPersonCameraComponent->SetFirstPersonFieldOfView(70.0f);
-	FirstPersonCameraComponent->SetFirstPersonScale(0.6f);
+	FirstPersonCameraComponent->SetFirstPersonFieldOfView(90.0f);
+	FirstPersonCameraComponent->SetFirstPersonScale(0.9f);
 
 	// Create the health component
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("Health Component"));
@@ -44,8 +44,15 @@ ABaseCharacter::ABaseCharacter()
 	GetCapsuleComponent()->SetCapsuleSize(34.0f, 96.0f);
 
 	// Configure character movement
-	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 	GetCharacterMovement()->AirControl = 0.5f;
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	GetCharacterMovement()->MaxWalkSpeedCrouched = 400.0f / 2.0f;
+	GetCharacterMovement()->GravityScale = 1.5f;
+	GetCharacterMovement()->MaxAcceleration = 3072.0f;
+	GetCharacterMovement()->BrakingFriction = 1.0f;
+	GetCharacterMovement()->BrakingFrictionFactor = 1.0f;
+	GetCharacterMovement()->BrakingDecelerationFalling = 200.0f;
+	GetCharacterMovement()->JumpZVelocity = 500.0f;
 }
 
 void ABaseCharacter::DoAim(float Yaw, float Pitch)

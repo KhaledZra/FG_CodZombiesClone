@@ -64,7 +64,7 @@ protected:
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
-	virtual void PlayWeaponFireMontage(UAnimMontage* Montage) override;
+	virtual void PlayWeaponMontage(UAnimMontage* Montage) override;
 	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;

@@ -26,6 +26,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 	int GunDamage = 0;
 	
 	UPROPERTY(EditAnywhere)
+	float ReloadLength = 0;
+	
+	UPROPERTY(EditAnywhere)
 	bool bAutoFire = false;
 
 	UPROPERTY(EditAnywhere)
@@ -36,6 +39,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UAnimMontage> FiringMontage;
+	
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UAnimMontage> ReloadMontage;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;

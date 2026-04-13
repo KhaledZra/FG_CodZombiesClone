@@ -44,6 +44,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	bool bAutoFire;
 	
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	float ReloadLength;
+	
 	void StartFiring();
 	void StopFiring();
 	void Reload();
@@ -61,6 +64,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> FiringMontage;
 	
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> ReloadMontage;
+	
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
 	
@@ -68,13 +74,16 @@ protected:
 	IWeaponUser* WeaponUser;
 	
 	bool bFireCooldownActive = false;
+	bool bIsReloading = false;
 	FTimerHandle FireCooldownTimer;
 	FTimerHandle AutoFireTimer;
+	FTimerHandle ReloadTimer;
 
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
 	
 	void Fire();
+	void OnReloadComplete();
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

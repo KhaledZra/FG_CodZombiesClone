@@ -122,7 +122,7 @@ void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
 	// todo: Does nothing
 }
 
-void APlayerCharacter::PlayWeaponFireMontage(UAnimMontage* Montage)
+void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage)
 {
 	BP_PlayFpsAnimMontage(Montage);
 }
