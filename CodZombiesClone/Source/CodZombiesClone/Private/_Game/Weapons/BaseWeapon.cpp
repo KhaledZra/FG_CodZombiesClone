@@ -3,8 +3,10 @@
 
 #include "_Game/Weapons/BaseWeapon.h"
 
-#include "CodZombiesClone.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "_Game/Components/HealthComponent.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
+#include "_Game/GameModes/FpsGameMode.h"
 #include "_Game/Interfaces/WeaponUser.h"
 
 
@@ -47,6 +49,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		RecoilStrength = data->RecoilStrength;
 		FireRate = data->FireRate;
 		BulletRange = data->BulletRange;
+		GunDamage = data->GunDamage;
 	}
 }
 
@@ -95,24 +98,47 @@ void ABaseWeapon::StartFiring()
 
 	// Recoil
 	WeaponUser->AddRecoil(RecoilStrength);
-	
+
 	if (!FMath::IsNearlyEqual(FireRate, 0.0f))
 	{
 		bFireCooldownActive = true;
 		GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
-									   FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
-									   FireRate, false);
+		                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
+		                                       FireRate, false);
 	}
 
-	// Debug stuff
-	// UE_LOG(Khaled, Display, TEXT("Firing weapon! Aim Location: %s"), *startLocation.ToString());
-	DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 2.0f, 0, 1.0f);
+	// Do the linetrace stuff
+	ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_WorldStatic);
+	bool bTraceComplex = true;
+	TArray<AActor*> ActorsToIgnore;
+	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::ForDuration;
+	FHitResult OutHit;
+	bool bIgnoreSelf = true;
+	
+	// Get player actors
+	if (const AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
+	{
+		ActorsToIgnore = gm->PlayerActors;
+	}
+	else ActorsToIgnore.Add(GetOwner());
+	
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(), startLocation, endLocation, TraceChannel, bTraceComplex,
+	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
+
+	if (OutHit.bBlockingHit && OutHit.GetActor() != nullptr)
+	{
+		if (UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>())
+		{
+			// UE_LOG(Khaled, Display, TEXT("Hit Actor: %s"), *OutHit.GetActor()->GetName());
+			HealthComp->TakeDamage(GunDamage);
+		}
+	}
 }
 
 void ABaseWeapon::Reload()
 {
 	if (CurrentAmmo == MagazineSize) return;
-	
+
 	CurrentAmmo = MagazineSize;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 }

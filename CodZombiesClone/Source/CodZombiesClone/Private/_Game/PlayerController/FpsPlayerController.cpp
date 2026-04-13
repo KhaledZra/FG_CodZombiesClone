@@ -8,6 +8,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Public/_Game/Managers/FpsPlayerCameraManager.h"
 #include "_Game/Characters/PlayerCharacter.h"
+#include "_Game/GameModes/FpsGameMode.h"
 
 AFpsPlayerController::AFpsPlayerController()
 {
@@ -50,6 +51,12 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 	
 	OnNewControllerActivated.Broadcast(this);
 	UE_LOG(Khaled, Display, TEXT("Player Inputs Live!"));
+	
+	// Register player character to the game mode for global access
+	if (AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
+	{
+		gm->PlayerActors.Add(CharacterRef);
+	}
 }
 
 void AFpsPlayerController::SetupInputComponent()

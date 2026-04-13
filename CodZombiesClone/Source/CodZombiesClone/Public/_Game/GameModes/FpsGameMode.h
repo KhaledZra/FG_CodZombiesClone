@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "FpsGameMode.generated.h"
 
+class APlayerCharacter;
 /**
  * 
  */
@@ -16,4 +17,7 @@ class CODZOMBIESCLONE_API AFpsGameMode : public AGameModeBase
 	
 public:
 	AFpsGameMode();
+	
+	UPROPERTY(VisibleAnywhere, Category = "Global")
+	TArray<TObjectPtr<AActor>> PlayerActors;
 };
