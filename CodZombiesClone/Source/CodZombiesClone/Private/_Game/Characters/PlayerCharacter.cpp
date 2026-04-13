@@ -124,7 +124,6 @@ void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
 
 void APlayerCharacter::PlayWeaponFireMontage(UAnimMontage* Montage)
 {
-	// todo: Needs to also trigger the TpsAnimMontage
 	BP_PlayFpsAnimMontage(Montage);
 }
 

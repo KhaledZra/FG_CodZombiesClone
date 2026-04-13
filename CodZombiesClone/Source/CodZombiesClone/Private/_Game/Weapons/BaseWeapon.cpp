@@ -75,7 +75,6 @@ void ABaseWeapon::BeginPlay()
 
 void ABaseWeapon::StartFiring()
 {
-	// todo: need to implement firing logic here, but for now this is just a placeholder to test the weapon system.
 	if (bFireCooldownActive) return;
 	// Reload handling - Pretty shit but it works for now.
 	if (CurrentAmmo <= 0)
