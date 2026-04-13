@@ -3,6 +3,7 @@
 
 #include "_Game/Weapons/BaseWeapon.h"
 
+#include "CodZombiesClone.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "_Game/Components/HealthComponent.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
@@ -50,6 +51,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		FireRate = data->FireRate;
 		BulletRange = data->BulletRange;
 		GunDamage = data->GunDamage;
+		bAutoFire = data->bAutoFire;
 	}
 }
 
@@ -78,11 +80,47 @@ void ABaseWeapon::StartFiring()
 	// Reload handling - Pretty shit but it works for now.
 	if (CurrentAmmo <= 0)
 	{
-		CurrentAmmo = MagazineSize;
-		WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+		Reload();
 		return;
 	}
 
+	if (!FMath::IsNearlyEqual(FireRate, 0.0f))
+	{
+		bFireCooldownActive = true;
+		GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
+		                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
+		                                       FireRate, false);
+	}
+
+	Fire();
+}
+
+void ABaseWeapon::StopFiring()
+{
+	if (bAutoFire) // Timer is only used when u auto fire
+	{
+		UE_LOG(Khaled, Log, TEXT("Auto Fire Stopped"));
+		GetWorld()->GetTimerManager().ClearTimer(AutoFireTimer);
+	}
+}
+
+void ABaseWeapon::Reload()
+{
+	if (CurrentAmmo == MagazineSize) return;
+
+	CurrentAmmo = MagazineSize;
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+}
+
+void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
+{
+	Destroy();
+}
+
+void ABaseWeapon::Fire()
+{
+	if (CurrentAmmo <= 0) return; // Since autofire keeps running this function
+	
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;
 	FVector endLocation = FVector::ZeroVector;
@@ -99,14 +137,6 @@ void ABaseWeapon::StartFiring()
 	// Recoil
 	WeaponUser->AddRecoil(RecoilStrength);
 
-	if (!FMath::IsNearlyEqual(FireRate, 0.0f))
-	{
-		bFireCooldownActive = true;
-		GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
-		                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
-		                                       FireRate, false);
-	}
-
 	// Do the linetrace stuff
 	ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_WorldStatic);
 	bool bTraceComplex = true;
@@ -114,14 +144,14 @@ void ABaseWeapon::StartFiring()
 	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::ForDuration;
 	FHitResult OutHit;
 	bool bIgnoreSelf = true;
-	
+
 	// Get player actors
 	if (const AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
 	{
 		ActorsToIgnore = gm->PlayerActors;
 	}
 	else ActorsToIgnore.Add(GetOwner());
-	
+
 	UKismetSystemLibrary::LineTraceSingle(GetWorld(), startLocation, endLocation, TraceChannel, bTraceComplex,
 	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
 
@@ -133,17 +163,14 @@ void ABaseWeapon::StartFiring()
 			HealthComp->TakeDamage(GunDamage);
 		}
 	}
-}
 
-void ABaseWeapon::Reload()
-{
-	if (CurrentAmmo == MagazineSize) return;
-
-	CurrentAmmo = MagazineSize;
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
-}
-
-void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
-{
-	Destroy();
+	// If it's auto set a timer to keep firing
+	if (bAutoFire)
+	{
+		UE_LOG(Khaled, Log, TEXT("Auto Fire Triggered"));
+		float fireRate = FMath::IsNearlyEqual(FireRate, 0.0f) ? 0.01f : FireRate;
+		GetWorld()->GetTimerManager().SetTimer(AutoFireTimer,
+		                                       this, &ABaseWeapon::Fire,
+		                                       fireRate, false);
+	}
 }

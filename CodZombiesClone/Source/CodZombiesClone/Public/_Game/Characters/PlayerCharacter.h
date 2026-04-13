@@ -25,6 +25,7 @@ public:
 	int GetCurrentScore() const;
 	
 	void DoLeftFireStarted();
+	void DoLeftFireStopped();
 	void DoReload();
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);

@@ -24,6 +24,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere)
 	int GunDamage = 0;
+	
+	UPROPERTY(EditAnywhere)
+	bool bAutoFire = false;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;

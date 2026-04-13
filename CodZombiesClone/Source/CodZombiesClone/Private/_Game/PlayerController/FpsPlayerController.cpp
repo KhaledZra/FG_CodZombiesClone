@@ -138,7 +138,7 @@ void AFpsPlayerController::OnLeftFireStarted()
 
 void AFpsPlayerController::OnLeftFireCompleted()
 {
-	// rn does nothing i guess. 
+	CharacterRef->DoLeftFireStopped();
 }
 
 void AFpsPlayerController::OnReloadStarted()

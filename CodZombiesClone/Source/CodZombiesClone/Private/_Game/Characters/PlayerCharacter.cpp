@@ -79,6 +79,14 @@ void APlayerCharacter::DoLeftFireStarted()
 	CurrentWeapon->StartFiring();
 }
 
+void APlayerCharacter::DoLeftFireStopped()
+{
+	// Holding weapon check
+	if (!CurrentWeapon) return;
+	
+	CurrentWeapon->StopFiring();
+}
+
 void APlayerCharacter::DoReload()
 {
 	if (!CurrentWeapon) return;

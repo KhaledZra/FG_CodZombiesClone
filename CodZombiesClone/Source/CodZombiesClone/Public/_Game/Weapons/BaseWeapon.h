@@ -41,7 +41,11 @@ public:
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int GunDamage;
 	
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	bool bAutoFire;
+	
 	void StartFiring();
+	void StopFiring();
 	void Reload();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
@@ -65,9 +69,12 @@ protected:
 	
 	bool bFireCooldownActive = false;
 	FTimerHandle FireCooldownTimer;
+	FTimerHandle AutoFireTimer;
 
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
+	
+	void Fire();
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
