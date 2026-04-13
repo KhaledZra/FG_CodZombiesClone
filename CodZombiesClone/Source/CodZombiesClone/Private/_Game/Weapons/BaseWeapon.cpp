@@ -139,7 +139,11 @@ void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
 void ABaseWeapon::Fire()
 {
 	if (bIsReloading) return;
-	if (CurrentAmmo <= 0) return;
+	if (CurrentAmmo <= 0)
+	{
+		WeaponUser->PlayWeaponMontage(DryFireMontage);
+		return;
+	}
 	
 	FVector startLocation = FVector::ZeroVector;
 	FVector direction = FVector::ZeroVector;
