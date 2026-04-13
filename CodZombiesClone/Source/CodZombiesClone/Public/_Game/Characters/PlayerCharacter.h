@@ -25,6 +25,7 @@ public:
 	int GetCurrentScore() const;
 	
 	void DoLeftFireStarted();
+	void DoReload();
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);
 
@@ -74,4 +75,8 @@ protected:
 	void CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex);
 	void SetPlayerIndex(int Index);
 	void SetPlayerColor(FColor Color) const;
+	
+	// IHealthUser interface
+	virtual void OnDeath() override;
+	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) override;
 };

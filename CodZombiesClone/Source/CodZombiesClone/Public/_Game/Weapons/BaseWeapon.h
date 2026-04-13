@@ -39,6 +39,7 @@ public:
 	float BulletRange;
 	
 	void StartFiring();
+	void Reload();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }

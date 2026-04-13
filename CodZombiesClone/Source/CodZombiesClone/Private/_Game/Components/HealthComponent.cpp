@@ -25,6 +25,7 @@ void UHealthComponent::BeginPlay()
 
 	MaxHealth = StartingMaxHealth;
 	CurrentHealth = MaxHealth;
+	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 }
 
 
@@ -46,11 +47,13 @@ void UHealthComponent::SetMaxHealth(const int& Health, const bool& bForceHeal)
 void UHealthComponent::Heal(const int& HealAmount)
 {
 	CurrentHealth = FMath::Min(CurrentHealth + HealAmount, MaxHealth);
+	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 }
 
 void UHealthComponent::TakeDamage(const int& DamageAmount)
 {
 	CurrentHealth = FMath::Max(CurrentHealth - DamageAmount, 0);
+	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 
 	if (CurrentHealth <= 0) Die();
 }

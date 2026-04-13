@@ -92,6 +92,9 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 	eic->BindAction(FireAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnLeftFireStarted);
 	eic->BindAction(FireAction, ETriggerEvent::Completed, this, &AFpsPlayerController::OnLeftFireCompleted);
 	
+	// Left Fire Input
+	eic->BindAction(ReloadAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnReloadStarted);
+	
 	SetupInputComponent();
 }
 
@@ -129,6 +132,11 @@ void AFpsPlayerController::OnLeftFireStarted()
 void AFpsPlayerController::OnLeftFireCompleted()
 {
 	// rn does nothing i guess. 
+}
+
+void AFpsPlayerController::OnReloadStarted()
+{
+	CharacterRef->DoReload();
 }
 
 FColor AFpsPlayerController::GetPlayerColor(int Index)

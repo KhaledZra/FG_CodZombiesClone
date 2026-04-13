@@ -109,6 +109,14 @@ void ABaseWeapon::StartFiring()
 	DrawDebugLine(GetWorld(), startLocation, endLocation, FColor::Red, false, 2.0f, 0, 1.0f);
 }
 
+void ABaseWeapon::Reload()
+{
+	if (CurrentAmmo == MagazineSize) return;
+	
+	CurrentAmmo = MagazineSize;
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+}
+
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
 {
 	Destroy();

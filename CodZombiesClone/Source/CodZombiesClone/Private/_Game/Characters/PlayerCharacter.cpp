@@ -14,7 +14,7 @@ APlayerCharacter::APlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	StartingScore = 500;
 	CurrentScore = StartingScore;
 }
@@ -24,10 +24,10 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int C
 	PlayerUIRef = CreateWidget<UPlayerUI>(OwningController, PlayerUiClass);
 	ensure(PlayerUIRef != nullptr);
 	PlayerUIRef->AddToPlayerScreen();
-	
+
 	PlayerUIRef->SetupPlayerUI(CurrentPlayerIndex, this);
 	PlayerUIRef->UpdateScore(CurrentScore, CurrentPlayerIndex);
-	
+
 	// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
 	// 	&PlayerUIRef,
 	// 	*this->GetName());
@@ -58,13 +58,32 @@ void APlayerCharacter::SetPlayerColor(const FColor Color) const
 	FirstPersonMesh->SetColorParameterValueOnMaterials("Paint Tint", Color);
 }
 
+void APlayerCharacter::OnDeath()
+{
+	// todo: death stuff? maybe go to downed state?
+}
+
+void APlayerCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth)
+{
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_UpdateHealthBar(CurrentHealth, MaxHealth);
+	}
+}
+
 void APlayerCharacter::DoLeftFireStarted()
 {
 	// Holding weapon check
 	if (!CurrentWeapon) return;
 	
-	//todo: work in progress should fire from weapon
 	CurrentWeapon->StartFiring();
+}
+
+void APlayerCharacter::DoReload()
+{
+	if (!CurrentWeapon) return;
+	
+	CurrentWeapon->Reload();
 }
 
 void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex)
@@ -79,7 +98,7 @@ void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor P
 void APlayerCharacter::AttachWeapon(ABaseWeapon* Weapon)
 {
 	const FAttachmentTransformRules AttachmentRule(EAttachmentRule::SnapToTarget, false);
-	
+
 	Weapon->AttachToActor(this, AttachmentRule);
 	Weapon->GetFirstPersonMesh()->AttachToComponent(FirstPersonMesh, AttachmentRule, FpsWeaponSocket);
 	Weapon->GetThirdPersonMesh()->AttachToComponent(GetMesh(), AttachmentRule, TpsWeaponSocket);
@@ -145,4 +164,3 @@ void APlayerCharacter::AddRecoil(float RecoilStrength)
 {
 	AddControllerPitchInput(-RecoilStrength);
 }
-

@@ -46,4 +46,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "UpdateBulletCounter"))
 	void BP_UpdateBulletCounter(int MagazineSize, int BulletCount);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "UpdateHealthBar"))
+	void BP_UpdateHealthBar(int CurrentHealth, int MaxHealth);
 };

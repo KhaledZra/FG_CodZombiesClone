@@ -56,5 +56,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Input")
 	virtual void DoJumpEnd();
 
+	// IHealthUser interface
 	virtual void OnDeath() override;
+	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) override;
 };

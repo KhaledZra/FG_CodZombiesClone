@@ -53,6 +53,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Input")
 	TObjectPtr<UInputAction> FireAction;
 	
+	UPROPERTY(EditAnywhere, Category ="Input")
+	TObjectPtr<UInputAction> ReloadAction;
+	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
 	TObjectPtr<APlayerCharacter> CharacterRef;
 	
@@ -73,5 +76,6 @@ protected:
 	void OnJumpCompleted();
 	void OnLeftFireStarted();
 	void OnLeftFireCompleted();
+	void OnReloadStarted();
 	FColor GetPlayerColor(int Index);
 };

@@ -79,3 +79,8 @@ void ABaseCharacter::OnDeath()
 	Destroy();
 }
 
+void ABaseCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth)
+{
+	// Empty, overriden in other classes
+}
+
