@@ -114,7 +114,16 @@ void APlayerCharacter::AttachWeapon(ABaseWeapon* Weapon)
 
 void APlayerCharacter::OnWeaponActivated(ABaseWeapon* Weapon)
 {
-	// todo: Does nothing
+	UE_LOG(Khaled, Log, TEXT("Weapon activated: %s"), *Weapon->GetName());
+
+	// set the character mesh AnimInstances
+	GetFirstPersonMesh()->SetAnimInstanceClass(Weapon->GetFirstPersonAnimInstanceClass());
+	GetMesh()->SetAnimInstanceClass(Weapon->GetThirdPersonAnimInstanceClass());
+	
+	// Use the new weapon
+	Weapon->ActivateWeapon();
+	Weapon->SetActorHiddenInGame(false);
+	CurrentWeapon = Weapon;
 }
 
 void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
@@ -141,16 +150,7 @@ void APlayerCharacter::EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
 	if (!AddedWeapon)
 	{
 		UE_LOG(Khaled, Error, TEXT("APlayerCharacter::EquipWeapon - Failed to spawn weapon"));
-		return;
 	}
-
-	// Use the new weapon
-	CurrentWeapon = AddedWeapon;
-	CurrentWeapon->SetActorHiddenInGame(false);
-
-	// set the character mesh AnimInstances
-	GetFirstPersonMesh()->SetAnimInstanceClass(CurrentWeapon->GetFirstPersonAnimInstanceClass());
-	GetMesh()->SetAnimInstanceClass(CurrentWeapon->GetThirdPersonAnimInstanceClass());
 }
 
 void APlayerCharacter::GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection)

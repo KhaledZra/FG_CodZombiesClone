@@ -50,6 +50,7 @@ public:
 	void StartFiring();
 	void StopFiring();
 	void Reload();
+	void ActivateWeapon();
 
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
@@ -66,6 +67,9 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> ReloadMontage;
+	
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> EquippedMontage;
 	
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;

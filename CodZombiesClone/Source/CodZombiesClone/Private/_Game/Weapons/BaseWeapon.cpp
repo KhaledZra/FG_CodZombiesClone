@@ -44,6 +44,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 
 		FiringMontage = data->FiringMontage.LoadSynchronous();
 		ReloadMontage = data->ReloadMontage.LoadSynchronous();
+		EquippedMontage = data->EquippedMontage.LoadSynchronous();
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
 
@@ -73,6 +74,8 @@ void ABaseWeapon::BeginPlay()
 
 	// Update UI
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	
+	WeaponUser->OnWeaponActivated(this);
 }
 
 void ABaseWeapon::StartFiring()
@@ -118,6 +121,11 @@ void ABaseWeapon::Reload()
 										   ReloadLength, false);
 	
 	WeaponUser->PlayWeaponMontage(ReloadMontage);
+}
+
+void ABaseWeapon::ActivateWeapon()
+{
+	WeaponUser->PlayWeaponMontage(EquippedMontage);
 }
 
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)

@@ -42,6 +42,9 @@ struct FWeaponDataTableRow : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UAnimMontage> ReloadMontage;
+		
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UAnimMontage> EquippedMontage;
 	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
