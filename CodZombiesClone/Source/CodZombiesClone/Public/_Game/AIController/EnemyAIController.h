@@ -14,15 +14,4 @@ class CODZOMBIESCLONE_API AEnemyAIController : public AAIController
 public:
 	// Sets default values for this actor's properties
 	AEnemyAIController();
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AI")
-	TObjectPtr<AActor> CurrentTarget;
-protected:
-	
-	FTimerHandle SetTargetTimer;
-
-protected:
-	virtual void OnPossess(APawn* InPawn) override;
-	virtual void OnUnPossess() override;
-	virtual void Tick(float DeltaSeconds) override;
 };
