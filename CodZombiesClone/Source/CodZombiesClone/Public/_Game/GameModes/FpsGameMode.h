@@ -18,6 +18,6 @@ class CODZOMBIESCLONE_API AFpsGameMode : public AGameModeBase
 public:
 	AFpsGameMode();
 	
-	UPROPERTY(VisibleAnywhere, Category = "Global")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Global")
 	TArray<TObjectPtr<AActor>> PlayerActors;
 };
