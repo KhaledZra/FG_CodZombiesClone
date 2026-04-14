@@ -24,7 +24,7 @@ public:
 	void Heal(const int& HealAmount);
 
 	UFUNCTION(BlueprintCallable, Category="Health")
-	void TakeDamage(const int& DamageAmount);
+	void TakeDamage(const int& DamageAmount, const FString& BodyPartName, bool& bOutIsDead);
 	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Die();

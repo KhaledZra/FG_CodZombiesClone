@@ -71,6 +71,8 @@ protected:
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
 	virtual void AddRecoil(float RecoilStrength) override;
+	virtual void OnEnemyHit(int Points) override;
+	virtual void OnShotFired() override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);

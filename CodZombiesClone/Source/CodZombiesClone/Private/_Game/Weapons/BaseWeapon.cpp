@@ -157,12 +157,13 @@ void ABaseWeapon::Fire()
 
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	WeaponUser->OnShotFired();
 
 	// Recoil
 	WeaponUser->AddRecoil(RecoilStrength);
 
 	// Do the linetrace stuff
-	ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_WorldStatic);
+	ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
 	bool bTraceComplex = true;
 	TArray<AActor*> ActorsToIgnore;
 	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::ForDuration;
@@ -181,10 +182,19 @@ void ABaseWeapon::Fire()
 
 	if (OutHit.bBlockingHit && OutHit.GetActor() != nullptr)
 	{
+		// Maybe uses the IDamagable interface?
+		UE_LOG(LogCodZombiesClone, Log, TEXT("%s"), *OutHit.BoneName.ToString());
+		
+		// Maybe has health comp?
 		if (UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>())
 		{
 			// UE_LOG(Khaled, Display, TEXT("Hit Actor: %s"), *OutHit.GetActor()->GetName());
-			HealthComp->TakeDamage(GunDamage);
+			bool bIsDead = false;
+			HealthComp->TakeDamage(GunDamage, OutHit.BoneName.ToString(), bIsDead);
+			
+			// Todo: hardcoded points, change to a manager that register points better
+			int pointsGained = bIsDead ? 100 : 10;
+			WeaponUser->OnEnemyHit(pointsGained);
 		}
 	}
 

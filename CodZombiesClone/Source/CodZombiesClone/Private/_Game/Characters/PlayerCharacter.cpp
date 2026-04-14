@@ -37,9 +37,6 @@ void APlayerCharacter::GainScore(int Score)
 {
 	CurrentScore += Score;
 	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
-
-	// todo: testing, remove this later
-	HealthComponent->TakeDamage(25);
 }
 
 void APlayerCharacter::SetPlayerIndex(int Index)
@@ -174,4 +171,17 @@ void APlayerCharacter::UpdateWeaponHud(int CurrentAmmo, int MagazineSize)
 void APlayerCharacter::AddRecoil(float RecoilStrength)
 {
 	AddControllerPitchInput(-RecoilStrength);
+}
+
+void APlayerCharacter::OnEnemyHit(int Points)
+{
+	GainScore(Points);
+}
+
+void APlayerCharacter::OnShotFired()
+{
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_ShotFired();
+	}
 }

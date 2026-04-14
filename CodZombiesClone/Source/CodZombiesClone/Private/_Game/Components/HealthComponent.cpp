@@ -50,12 +50,21 @@ void UHealthComponent::Heal(const int& HealAmount)
 	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 }
 
-void UHealthComponent::TakeDamage(const int& DamageAmount)
+void UHealthComponent::TakeDamage(const int& DamageAmount, const FString& BodyPartName, bool& bOutIsDead)
 {
-	CurrentHealth = FMath::Max(CurrentHealth - DamageAmount, 0);
+	bOutIsDead = false;
+	
+	// Hardcoded ngl
+	int finalDamageAmount = BodyPartName.Equals("head", ESearchCase::IgnoreCase) ? DamageAmount * 2 : DamageAmount;
+	
+	CurrentHealth = FMath::Max(CurrentHealth - finalDamageAmount, 0);
 	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 
-	if (CurrentHealth <= 0) Die();
+	if (CurrentHealth <= 0)
+	{
+		Die();
+		bOutIsDead = true;
+	}
 }
 
 void UHealthComponent::Die()
@@ -63,4 +72,3 @@ void UHealthComponent::Die()
 	if (HealthUser) HealthUser->OnDeath();
 	else GetOwner()->Destroy();
 }
-

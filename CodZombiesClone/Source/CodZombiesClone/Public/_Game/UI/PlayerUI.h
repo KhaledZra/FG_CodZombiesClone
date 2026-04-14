@@ -49,4 +49,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "UpdateHealthBar"))
 	void BP_UpdateHealthBar(int CurrentHealth, int MaxHealth);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Shot Fired"))
+	void BP_ShotFired();
 };
