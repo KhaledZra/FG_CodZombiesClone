@@ -1,0 +1,79 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "_Game/Characters/ZombieCharacter.h"
+
+#include "CodZombiesClone.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "_Game/AIController/EnemyAIController.h"
+#include "_Game/Characters/PlayerCharacter.h"
+#include "_Game/Components/HealthComponent.h"
+
+
+// Sets default values
+AZombieCharacter::AZombieCharacter()
+{
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
+	// Set 'bUseAccelerationForPaths = true' in bp
+
+	GetMesh()->SetCollisionProfileName("Enemy");
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
+	AIControllerClass = EnemyAIController;
+
+	AttackRange = 25.0f;
+	AttackSphereRadius = 25.0f;
+	AttackDamage = 10.0f;
+}
+
+void AZombieCharacter::AttackForward()
+{
+	// Hardcoded
+	FVector attackLocation = GetActorLocation() + (GetActorForwardVector() * AttackRange);
+	UKismetSystemLibrary::DrawDebugSphere(GetWorld(), attackLocation, AttackSphereRadius, 12, FLinearColor::Red, 1.0f,
+	                                      1.0f);
+	
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Camera));
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	UClass* ActorClassFilter = APlayerCharacter::StaticClass();
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(this);
+	TArray<AActor*> OutActors;
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), attackLocation, AttackSphereRadius, ObjectTypes,
+	                                          ActorClassFilter, ActorsToIgnore, OutActors);
+
+	if (OutActors.IsEmpty()) return;
+
+	for (AActor* hitActor : OutActors)
+	{
+		UE_LOG(Khaled, Log, TEXT("Hit: %s"), *hitActor->GetName());
+		if (UHealthComponent* hc = hitActor->FindComponentByClass<UHealthComponent>())
+		{
+			bool bIsDead = false; // not really cared for rn.
+			hc->TakeDamage(AttackDamage, "", bIsDead);
+		}
+	}
+}
+
+void AZombieCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	SpawnDefaultController();
+}
+
+void AZombieCharacter::OnDeath()
+{
+	if (AEnemyAIController* aic = Cast<AEnemyAIController>(GetController()))
+	{
+		aic->StopAILogic();
+	}
+
+	Destroy();
+}

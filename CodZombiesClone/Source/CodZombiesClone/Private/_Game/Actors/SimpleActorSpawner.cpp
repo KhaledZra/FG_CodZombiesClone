@@ -3,6 +3,8 @@
 
 #include "_Game/Actors/SimpleActorSpawner.h"
 
+#include "CodZombiesClone.h"
+
 
 // Sets default values
 ASimpleActorSpawner::ASimpleActorSpawner()
@@ -18,10 +20,16 @@ void ASimpleActorSpawner::SpawnActor(AActor* OldSpawnedActor)
 	
 	FActorSpawnParameters SpawnParameters;
 	SpawnParameters.Owner = this;
+	SpawnParameters.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	CurrentSpawnedActor = GetWorld()->SpawnActor<AActor>(ActorClassToSpawn, GetActorLocation(), FRotator::ZeroRotator,
 	                                                     SpawnParameters);
+	if (CurrentSpawnedActor == nullptr)
+	{
+		UE_LOG(Khaled, Error, TEXT("ASimpleActorSpawner::SpawnActor - Failed To Spawn Actor"));
+		return;
+	}
+	
 	CurrentSpawnedActor->OnDestroyed.AddDynamic(this, &ASimpleActorSpawner::SpawnActor);
-	// todo: fix Context Requirements in UStateTreeComponent::StopLogic failed. Component tick is disabled.
 }
 
 // Called when the game starts or when spawned
