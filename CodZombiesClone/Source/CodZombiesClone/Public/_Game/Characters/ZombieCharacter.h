@@ -32,6 +32,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category="Attack")
 	int AttackDamage;
 
+	UPROPERTY(EditAnywhere, Category="Animation")
+	TArray<TObjectPtr<UAnimMontage>> AttackMontages;
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
+	void BP_PlayAnimMontage(UAnimMontage* Montage);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnDeath() override;
