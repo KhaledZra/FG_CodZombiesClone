@@ -6,6 +6,7 @@
 #include "CodZombiesClone.h"
 #include "Camera/CameraComponent.h"
 #include "_Game/Components/InteractionComponent.h"
+#include "_Game/PlayerController/FpsPlayerController.h"
 #include "_Game/Weapons/BaseWeapon.h"
 
 
@@ -88,6 +89,13 @@ void APlayerCharacter::OnUpdateInteractionUI(const FString& InteractString)
 	}
 }
 
+FText APlayerCharacter::GetInteractionKeyText()
+{
+	if (FpsControllerRef == nullptr) return FText::FromString("NULL");
+	
+	return FpsControllerRef->GetInteractionKeyText();
+}
+
 void APlayerCharacter::DoLeftFireStarted()
 {
 	// Holding weapon check
@@ -123,6 +131,11 @@ void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor P
 	SetPlayerColor(PlayerColor);
 	if (StarterWeapon) EquipWeapon(StarterWeapon);
 	InteractionComponent->StartInteractionSystem(FirstPersonCameraComponent);
+
+	if (AFpsPlayerController* fpsCont = Cast<AFpsPlayerController>(OwningController))
+	{
+		FpsControllerRef = fpsCont;
+	}
 }
 
 // Right now this is called inside the BaseWeapon BeginPlay
@@ -212,5 +225,10 @@ void APlayerCharacter::OnShotFired()
 	if (PlayerUIRef)
 	{
 		PlayerUIRef->BP_ShotFired();
+	}
+	
+	if (AFpsPlayerController* FpsController = Cast<AFpsPlayerController>(GetController()))
+	{
+		auto test = FpsController->GetInteractionKeyText();
 	}
 }

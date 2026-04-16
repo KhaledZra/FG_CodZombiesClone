@@ -205,7 +205,7 @@ void ABaseWeapon::Fire()
 	// If it's auto set a timer to keep firing
 	if (bAutoFire)
 	{
-		UE_LOG(Khaled, Log, TEXT("Auto Fire Triggered"));
+		// UE_LOG(Khaled, Log, TEXT("Auto Fire Triggered"));
 		float fireRate = FMath::IsNearlyEqual(FireRate, 0.0f) ? 0.01f : FireRate;
 		GetWorld()->GetTimerManager().SetTimer(AutoFireTimer,
 		                                       this, &ABaseWeapon::Fire,

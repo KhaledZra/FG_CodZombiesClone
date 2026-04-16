@@ -1,7 +1,7 @@
 #pragma once
-#include "FPointPriceDataTableRow.h"
-
 #include "FInteractionDataTableRow.generated.h"
+
+class UInputAction;
 
 UENUM()
 enum EInteractionType
@@ -17,10 +17,7 @@ struct FInteractionDataTableRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	FString KeyDetails;
-
-	UPROPERTY(EditAnywhere)
-	FString KeyName;
+	FString KeyDetails; // todo: E.g. "Press", "Hold", "Double Tap" etc.
 	
 	UPROPERTY(EditAnywhere)
 	FString Connection;

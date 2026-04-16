@@ -31,6 +31,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	int GetPlayerIndex() const;
 	
+	UFUNCTION(BlueprintCallable)
+	FText GetInteractionKeyText() const;
+	
 	FNewControllerAtivatedDelegate OnNewControllerActivated;
 
 protected:

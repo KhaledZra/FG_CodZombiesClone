@@ -9,6 +9,7 @@
 #include "_Game/Interfaces/WeaponUser.h"
 #include "PlayerCharacter.generated.h"
 
+class AFpsPlayerController;
 class UInteractionComponent;
 class ABaseWeapon;
 
@@ -70,6 +71,9 @@ protected:
 	TSubclassOf<ABaseWeapon> StarterWeapon;
 	
 	FTimerHandle EquipWeaponVisibilityTimer;
+	
+	UPROPERTY()
+	TObjectPtr<AFpsPlayerController> FpsControllerRef;
 
 	/** IWeaponUser implementation */
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
@@ -96,4 +100,5 @@ protected:
 	
 	// IInteractionUser interface
 	virtual void OnUpdateInteractionUI(const FString& InteractString) override;
+	virtual FText GetInteractionKeyText() override;
 };

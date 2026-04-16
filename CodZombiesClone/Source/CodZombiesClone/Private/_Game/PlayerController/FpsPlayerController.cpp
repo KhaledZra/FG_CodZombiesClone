@@ -21,11 +21,34 @@ int AFpsPlayerController::GetPlayerIndex() const
 	return GetLocalPlayer()->GetLocalPlayerIndex();
 }
 
+FText AFpsPlayerController::GetInteractionKeyText() const
+{
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(
+		GetLocalPlayer()))
+	{
+		TArray<FKey> keys = Subsystem->QueryKeysMappedToAction(InteractAction);
+		if (keys.IsEmpty())
+		{
+			UE_LOG(Khaled, Warning, TEXT("EMPTY"));
+			return FText::FromString("NULL");
+		}
+		
+		// UE_LOG(Khaled, Warning, TEXT("Num Keys: %d"), keys.Num());
+		if (keys.Num() == 1) return keys[0].GetDisplayName();
+
+		// Keyboard is 0, gamepad is 1
+		return keys[GetPlayerIndex() == 0 ? 0 : 1].GetDisplayName();
+	}
+	else
+	{
+		UE_LOG(Khaled, Warning, TEXT("ERROR"));
+		return FText::FromString("NULL");
+	}
+}
+
 void AFpsPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-
-	
 }
 
 void AFpsPlayerController::OnPossess(APawn* InPawn)
@@ -37,7 +60,7 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 
 	if (!IsLocalController()) return;
 	SetupPlayerInputBinds();
-	
+
 	CharacterRef = Cast<APlayerCharacter>(InPawn);
 	ensure(CharacterRef != nullptr);
 	if (CharacterRef == nullptr)
@@ -45,13 +68,13 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 		UE_LOG(Khaled, Error, TEXT("Failed to get Character"));
 		return;
 	}
-	
+
 	int playerIndex = GetPlayerIndex();
 	CharacterRef->SetupPlayer(this, GetPlayerColor(playerIndex), playerIndex);
-	
+
 	OnNewControllerActivated.Broadcast(this);
 	UE_LOG(Khaled, Display, TEXT("Player Inputs Live!"));
-	
+
 	// Register player character to the game mode for global access
 	if (AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
 	{
@@ -62,7 +85,7 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 void AFpsPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	
+
 	if (!IsLocalPlayerController()) return;
 	
 	// Add Input Mapping Context
@@ -83,7 +106,7 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 		UE_LOG(Khaled, Error, TEXT("Failed to get Enhanced Input Component"));
 		return;
 	}
-	
+
 	// Jumping
 	eic->BindAction(JumpAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnJumpStarted);
 	eic->BindAction(JumpAction, ETriggerEvent::Completed, this, &AFpsPlayerController::OnJumpCompleted);
@@ -94,17 +117,17 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 	// Looking/Aiming, Look uses the right stick on controllers, MouseLook uses the mouse movement
 	eic->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFpsPlayerController::OnLookInputTriggered);
 	eic->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &AFpsPlayerController::OnLookInputTriggered);
-	
+
 	// Left Fire Input
 	eic->BindAction(FireAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnLeftFireStarted);
 	eic->BindAction(FireAction, ETriggerEvent::Completed, this, &AFpsPlayerController::OnLeftFireCompleted);
-	
+
 	// Left Fire Input
 	eic->BindAction(ReloadAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnReloadStarted);
-	
+
 	// Interaction Input
 	eic->BindAction(InteractAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnInteractionStarted);
-	
+
 	SetupInputComponent();
 }
 
@@ -120,7 +143,7 @@ void AFpsPlayerController::OnMoveInputTriggered(const FInputActionValue& Value)
 void AFpsPlayerController::OnLookInputTriggered(const FInputActionValue& Value)
 {
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
-	
+
 	CharacterRef->DoAim(LookAxisVector.X, LookAxisVector.Y);
 }
 
@@ -161,6 +184,6 @@ FColor AFpsPlayerController::GetPlayerColor(int Index)
 	if (Index == 1) return FColor::Green;
 	if (Index == 2) return FColor::Blue;
 	if (Index == 3) return FColor::Yellow;
-	
+
 	return FColor::White;
 }

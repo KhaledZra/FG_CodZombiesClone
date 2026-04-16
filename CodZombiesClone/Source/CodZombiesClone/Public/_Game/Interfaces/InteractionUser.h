@@ -23,4 +23,5 @@ class CODZOMBIESCLONE_API IInteractionUser
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void OnUpdateInteractionUI(const FString& InteractString) = 0;
+	virtual FText GetInteractionKeyText() = 0;
 };

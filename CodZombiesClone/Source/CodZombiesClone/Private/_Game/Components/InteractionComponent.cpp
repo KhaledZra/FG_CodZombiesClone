@@ -83,9 +83,10 @@ void UInteractionComponent::UpdateInteractionSystem()
 	{
 		bRequiresUIUpdate = Interactor != CurrentFocusedInteractor;
 		CurrentFocusedInteractor = Interactor;
-		newInteractionString = CurrentFocusedInteractor->GetInteractString();
+		FText inputKeyText = InteractionUserRef ? InteractionUserRef->GetInteractionKeyText() : FText::FromString("NULL");
+		newInteractionString = CurrentFocusedInteractor->GetInteractString(inputKeyText);
 
-		UE_LOG(Khaled, Log, TEXT("Found Interactor: %s"), *OutHit.GetActor()->GetName());
+		// UE_LOG(Khaled, Log, TEXT("Found Interactor: %s"), *OutHit.GetActor()->GetName());
 	}
 	else
 	{

@@ -5,6 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "_Game/Data/FInteractionDataTableRow.h"
+#include "_Game/Data/FPointPriceDataTableRow.h"
 
 
 // Sets default values for this component's properties
@@ -30,10 +31,10 @@ void UInteractorComponent::OnInteract_Implementation(AActor* Interactor)
 	UE_LOG(Khaled, Log, TEXT("Interaction activated"));
 }
 
-FString UInteractorComponent::GetInteractString_Implementation() const
+FString UInteractorComponent::GetInteractString_Implementation(const FText& InputKeyText) const
 {
-	FString result = KeyDetails + " " + KeyName + " " + Connection + " " + InteractionDetails;
-	UE_LOG(Khaled, Warning, TEXT("%s"), *result);
+	FString result = KeyDetails + " " + InputKeyText.ToString() + " " + Connection + " " + InteractionDetails;
+	// UE_LOG(Khaled, Warning, TEXT("%s"), *result);
 	if (InteractionType == Default) return result;
 	
 	FString interactionTypeString = InteractionType == EInteractionType::Buyable ? "Cost" : "Gain";
@@ -51,7 +52,7 @@ void UInteractorComponent::BeginPlay()
 	if (FInteractionDataTableRow* data = InteractionData.GetRow<FInteractionDataTableRow>(FString()))
 	{
 		KeyDetails = data->KeyDetails;
-		KeyName = data->KeyName;
+		// KeyName = data->KeyName;
 		Connection = data->Connection;
 		InteractionDetails = data->InteractionDetails;
 		InteractionType = data->InteractionType;

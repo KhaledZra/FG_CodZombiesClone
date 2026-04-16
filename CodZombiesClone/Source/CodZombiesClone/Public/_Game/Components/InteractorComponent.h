@@ -27,8 +27,8 @@ public:
 	virtual void OnInteract_Implementation(AActor* Interactor);
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
-	FString GetInteractString() const;
-	virtual FString GetInteractString_Implementation() const;
+	FString GetInteractString(const FText& InputKeyText) const;
+	virtual FString GetInteractString_Implementation(const FText& InputKeyText) const;
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
