@@ -5,7 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "Camera/CameraComponent.h"
-#include "_Game/Components/HealthComponent.h"
+#include "_Game/Components/InteractionComponent.h"
 #include "_Game/Weapons/BaseWeapon.h"
 
 
@@ -14,6 +14,8 @@ APlayerCharacter::APlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	InteractionComponent = CreateDefaultSubobject<UInteractionComponent>(TEXT("InteractionComponent"));
 
 	StartingScore = 500;
 	CurrentScore = StartingScore;
@@ -27,6 +29,7 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int C
 
 	PlayerUIRef->SetupPlayerUI(CurrentPlayerIndex, this);
 	PlayerUIRef->UpdateScore(CurrentScore, CurrentPlayerIndex);
+	PlayerUIRef->BP_UpdateInteractionText("");
 
 	// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
 	// 	&PlayerUIRef,
@@ -68,6 +71,14 @@ void APlayerCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& Max
 	}
 }
 
+void APlayerCharacter::OnUpdateInteractionUI(const FString& InteractString)
+{
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_UpdateInteractionText(InteractString);
+	}
+}
+
 void APlayerCharacter::DoLeftFireStarted()
 {
 	// Holding weapon check
@@ -97,6 +108,7 @@ void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor P
 	SetPlayerIndex(CurrentPlayerIndex);
 	SetPlayerColor(PlayerColor);
 	if (StarterWeapon) EquipWeapon(StarterWeapon);
+	InteractionComponent->StartInteractionSystem(FirstPersonCameraComponent);
 }
 
 // Right now this is called inside the BaseWeapon BeginPlay

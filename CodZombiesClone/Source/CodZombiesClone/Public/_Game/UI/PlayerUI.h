@@ -52,4 +52,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Shot Fired"))
 	void BP_ShotFired();
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Update Interaction String"))
+	void BP_UpdateInteractionText(const FString& InteractionString);
 };

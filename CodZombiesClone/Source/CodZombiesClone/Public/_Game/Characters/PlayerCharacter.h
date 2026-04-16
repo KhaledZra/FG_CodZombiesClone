@@ -4,16 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "_Game/Interfaces/InteractionUser.h"
 #include "_Game/UI/PlayerUI.h"
 #include "_Game/Interfaces/WeaponUser.h"
 #include "PlayerCharacter.generated.h"
 
+class UInteractionComponent;
 class ABaseWeapon;
 
 UCLASS()
-class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter, public IWeaponUser
+class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter, public IWeaponUser, public IInteractionUser
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInteractionComponent> InteractionComponent;
 
 public:
 	// Sets default values for this character's properties
@@ -84,4 +89,7 @@ protected:
 	// IHealthUser interface
 	virtual void OnDeath() override;
 	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) override;
+	
+	// IInteractionUser interface
+	virtual void OnUpdateInteractionUI(const FString& InteractString) override;
 };
