@@ -16,13 +16,12 @@ UInteractorComponent::UInteractorComponent()
 	// ...
 }
 
-void UInteractorComponent::OnInteract(AActor* Interactor)
+void UInteractorComponent::OnInteract_Implementation(AActor* Interactor)
 {
 	UE_LOG(Khaled, Log, TEXT("Interaction activated"));
 }
 
-FString UInteractorComponent::GetInteractString() const
+FString UInteractorComponent::GetInteractString_Implementation() const
 {
 	return "E - NULL";
 }
-

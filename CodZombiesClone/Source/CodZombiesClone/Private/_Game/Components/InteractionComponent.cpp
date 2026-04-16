@@ -42,6 +42,8 @@ void UInteractionComponent::StopInteractionSystem()
 void UInteractionComponent::Interact()
 {
 	if (CurrentFocusedInteractor == nullptr) return;
+	
+	CurrentFocusedInteractor->OnInteract(GetOwner());
 }
 
 void UInteractionComponent::UpdateInteractionSystem()

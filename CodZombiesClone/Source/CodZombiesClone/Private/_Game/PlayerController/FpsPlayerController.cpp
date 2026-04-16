@@ -102,6 +102,9 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 	// Left Fire Input
 	eic->BindAction(ReloadAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnReloadStarted);
 	
+	// Interaction Input
+	eic->BindAction(InteractAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnInteractionStarted);
+	
 	SetupInputComponent();
 }
 
@@ -144,6 +147,11 @@ void AFpsPlayerController::OnLeftFireCompleted()
 void AFpsPlayerController::OnReloadStarted()
 {
 	CharacterRef->DoReload();
+}
+
+void AFpsPlayerController::OnInteractionStarted()
+{
+	CharacterRef->DoInteraction();
 }
 
 FColor AFpsPlayerController::GetPlayerColor(int Index)

@@ -9,7 +9,7 @@
 /*
  * Dis one is for the interactable actor. aka the one to be interacted with.
  */
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class CODZOMBIESCLONE_API UInteractorComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -18,9 +18,12 @@ public:
 	// Sets default values for this component's properties
 	UInteractorComponent();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void OnInteract(AActor* Interactor);
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
+	void OnInteract(AActor* Interactor);
+	virtual void OnInteract_Implementation(AActor* Interactor);
 	
-	UFUNCTION(BlueprintCallable)
-	virtual FString GetInteractString() const;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
+	FString GetInteractString() const;
+	virtual FString GetInteractString_Implementation() const;
+	
 };

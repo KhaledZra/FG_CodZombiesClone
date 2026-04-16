@@ -102,6 +102,11 @@ void APlayerCharacter::DoReload()
 	CurrentWeapon->Reload();
 }
 
+void APlayerCharacter::DoInteraction()
+{
+	InteractionComponent->Interact();
+}
+
 void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex)
 {
 	CreatePlayerUI(OwningController, CurrentPlayerIndex);

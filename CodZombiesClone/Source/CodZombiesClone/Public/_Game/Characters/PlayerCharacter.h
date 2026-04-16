@@ -32,6 +32,7 @@ public:
 	void DoLeftFireStarted();
 	void DoLeftFireStopped();
 	void DoReload();
+	void DoInteraction();
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);
 
