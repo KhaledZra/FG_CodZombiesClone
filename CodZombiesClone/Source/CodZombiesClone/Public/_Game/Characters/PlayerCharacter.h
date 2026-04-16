@@ -27,6 +27,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GainScore(int Score);
 	
+	UFUNCTION(BlueprintCallable)
+	bool TryUseScore(int Score);
+	
 	int GetCurrentScore() const;
 	
 	void DoLeftFireStarted();

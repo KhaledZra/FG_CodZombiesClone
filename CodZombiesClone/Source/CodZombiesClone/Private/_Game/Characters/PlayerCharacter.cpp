@@ -14,7 +14,7 @@ APlayerCharacter::APlayerCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	InteractionComponent = CreateDefaultSubobject<UInteractionComponent>(TEXT("InteractionComponent"));
 
 	StartingScore = 500;
@@ -40,6 +40,15 @@ void APlayerCharacter::GainScore(int Score)
 {
 	CurrentScore += Score;
 	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+}
+
+bool APlayerCharacter::TryUseScore(int Score)
+{
+	if (CurrentScore < Score) return false;
+
+	CurrentScore -= Score;
+	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+	return true;
 }
 
 void APlayerCharacter::SetPlayerIndex(int Index)
@@ -83,7 +92,7 @@ void APlayerCharacter::DoLeftFireStarted()
 {
 	// Holding weapon check
 	if (!CurrentWeapon) return;
-	
+
 	CurrentWeapon->StartFiring();
 }
 
@@ -91,14 +100,14 @@ void APlayerCharacter::DoLeftFireStopped()
 {
 	// Holding weapon check
 	if (!CurrentWeapon) return;
-	
+
 	CurrentWeapon->StopFiring();
 }
 
 void APlayerCharacter::DoReload()
 {
 	if (!CurrentWeapon) return;
-	
+
 	CurrentWeapon->Reload();
 }
 
@@ -133,15 +142,18 @@ void APlayerCharacter::OnWeaponActivated(ABaseWeapon* Weapon)
 	// set the character mesh AnimInstances
 	GetFirstPersonMesh()->SetAnimInstanceClass(Weapon->GetFirstPersonAnimInstanceClass());
 	GetMesh()->SetAnimInstanceClass(Weapon->GetThirdPersonAnimInstanceClass());
-	
+
 	// Use the new weapon
 	Weapon->ActivateWeapon();
-	
+
 	CurrentWeapon = Weapon;
 	// Mini delay to make it look better when equipping, super hacky but w/e
 	GetWorld()->GetTimerManager().SetTimer(EquipWeaponVisibilityTimer,
-								   FTimerDelegate::CreateLambda([this] { CurrentWeapon->SetActorHiddenInGame(false); }),
-								   0.25, false);
+	                                       FTimerDelegate::CreateLambda([this]
+	                                       {
+		                                       CurrentWeapon->SetActorHiddenInGame(false);
+	                                       }),
+	                                       0.25, false);
 }
 
 void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)

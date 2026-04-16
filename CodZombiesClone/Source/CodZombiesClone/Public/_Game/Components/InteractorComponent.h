@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "_Game/Data/FInteractionDataTableRow.h"
 #include "InteractorComponent.generated.h"
 
 /*
@@ -17,6 +18,9 @@ class CODZOMBIESCLONE_API UInteractorComponent : public UActorComponent
 public:
 	// Sets default values for this component's properties
 	UInteractorComponent();
+	
+	UFUNCTION(BlueprintCallable)
+	void UpdateCost();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
 	void OnInteract(AActor* Interactor);
@@ -26,4 +30,30 @@ public:
 	FString GetInteractString() const;
 	virtual FString GetInteractString_Implementation() const;
 	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Data")
+	FDataTableRowHandle InteractionData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FString KeyDetails;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FString KeyName;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FString Connection;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FString InteractionDetails;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FDataTableRowHandle PriceData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	TEnumAsByte<EInteractionType> InteractionType;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	int Cost;
+	
+	virtual void BeginPlay() override;
 };
