@@ -89,6 +89,9 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);
+
+	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
+	void BP_PlayDeathAnimMontage();
 	
 	void CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex);
 	void SetPlayerIndex(int Index);

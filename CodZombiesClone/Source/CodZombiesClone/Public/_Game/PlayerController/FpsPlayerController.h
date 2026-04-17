@@ -33,6 +33,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	FText GetInteractionKeyText() const;
+
+	UFUNCTION()
+	void StopReadingInputs() const;
 	
 	FNewControllerAtivatedDelegate OnNewControllerActivated;
 

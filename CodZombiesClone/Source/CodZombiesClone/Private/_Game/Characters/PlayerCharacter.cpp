@@ -70,7 +70,9 @@ void APlayerCharacter::SetPlayerColor(const FColor Color) const
 
 void APlayerCharacter::OnDeath()
 {
+	FpsControllerRef->StopReadingInputs();
 	// todo: death stuff? maybe go to downed state?
+	BP_PlayDeathAnimMontage();
 }
 
 void APlayerCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth)

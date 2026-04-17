@@ -46,6 +46,17 @@ FText AFpsPlayerController::GetInteractionKeyText() const
 	}
 }
 
+void AFpsPlayerController::StopReadingInputs() const
+{
+	if (!IsLocalPlayerController()) return;
+	
+	// Add Input Mapping Context
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+	}
+}
+
 void AFpsPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
