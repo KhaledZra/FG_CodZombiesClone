@@ -27,7 +27,7 @@ public:
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) = 0;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) = 0;
 	virtual void PlayWeaponMontage(UAnimMontage* Montage) = 0;
-	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) = 0;
+	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) = 0;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) = 0;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) = 0;
 	virtual void AddRecoil(float RecoilStrength) = 0;

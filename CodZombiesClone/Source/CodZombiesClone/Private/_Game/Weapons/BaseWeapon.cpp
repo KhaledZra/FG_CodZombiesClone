@@ -75,11 +75,10 @@ void ABaseWeapon::BeginPlay()
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
 	WeaponUser->AttachWeapon(this);
-
-	// Update UI
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 	
 	WeaponUser->OnWeaponActivated(this);
+
+	UE_LOG(Khaled, Log, TEXT("Weapon BeginPlay"));
 }
 
 void ABaseWeapon::StartFiring()
@@ -128,6 +127,8 @@ void ABaseWeapon::Reload()
 
 void ABaseWeapon::ActivateWeapon()
 {
+	// Update UI
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
 	WeaponUser->PlayWeaponMontage(EquippedMontage);
 }
 

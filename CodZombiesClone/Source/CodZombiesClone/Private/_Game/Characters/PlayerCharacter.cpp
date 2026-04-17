@@ -5,6 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "_Game/Components/InteractionComponent.h"
 #include "_Game/PlayerController/FpsPlayerController.h"
 #include "_Game/Weapons/BaseWeapon.h"
@@ -68,6 +69,28 @@ void APlayerCharacter::SetPlayerColor(const FColor Color) const
 	FirstPersonMesh->SetColorParameterValueOnMaterials("Paint Tint", Color);
 }
 
+void APlayerCharacter::SpawnStarterWeapons()
+{
+	if (StarterWeapons.IsEmpty()) return;
+
+	for (TSubclassOf<ABaseWeapon> weapon : StarterWeapons)
+	{
+		TryEquipWeapon(weapon);
+	}
+}
+
+bool APlayerCharacter::IsWeaponAlreadyOwned(TSubclassOf<ABaseWeapon> WeaponClass)
+{
+	if (OwnedWeapons.IsEmpty()) return false;
+
+	for (ABaseWeapon* Element : OwnedWeapons)
+	{
+		if (Element->IsA(WeaponClass)) return true;
+	}
+
+	return false;
+}
+
 void APlayerCharacter::OnDeath()
 {
 	FpsControllerRef->StopReadingInputs();
@@ -94,7 +117,7 @@ void APlayerCharacter::OnUpdateInteractionUI(const FString& InteractString)
 FText APlayerCharacter::GetInteractionKeyText()
 {
 	if (FpsControllerRef == nullptr) return FText::FromString("NULL");
-	
+
 	return FpsControllerRef->GetInteractionKeyText();
 }
 
@@ -126,12 +149,34 @@ void APlayerCharacter::DoInteraction()
 	InteractionComponent->Interact();
 }
 
+void APlayerCharacter::DoCycleWeapons()
+{
+	if (OwnedWeapons.IsEmpty()) return;
+	if (OwnedWeapons.Num() == 1) return;
+
+	for (int i = 0; i < OwnedWeapons.Num(); ++i)
+	{
+		if (CurrentWeapon == OwnedWeapons[i])
+		{
+			int nextWeapon = i + 1;
+			if (nextWeapon >= OwnedWeapons.Num()) nextWeapon = 0;
+			OnWeaponDeactivated(CurrentWeapon);
+			OnWeaponActivated(OwnedWeapons[nextWeapon]);
+			return;
+		}
+	}
+
+	// Should never happen i hope lmao
+	UE_LOG(Khaled, Error, TEXT("APlayerCharacter::DoCycleWeapons - Could not find weapon index"));
+}
+
 void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex)
 {
 	CreatePlayerUI(OwningController, CurrentPlayerIndex);
 	SetPlayerIndex(CurrentPlayerIndex);
 	SetPlayerColor(PlayerColor);
-	if (StarterWeapon) EquipWeapon(StarterWeapon);
+	SpawnStarterWeapons();
+
 	InteractionComponent->StartInteractionSystem(FirstPersonCameraComponent);
 
 	if (AFpsPlayerController* fpsCont = Cast<AFpsPlayerController>(OwningController))
@@ -173,7 +218,18 @@ void APlayerCharacter::OnWeaponActivated(ABaseWeapon* Weapon)
 
 void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
 {
-	// todo: Does nothing
+	// todo: Maybe go back to unarmed anims?
+
+	Weapon->StopFiring();
+	Weapon->SetActorHiddenInGame(true);
+	Weapon->SetActorEnableCollision(false);
+	Weapon->SetActorTickEnabled(false);
+	CurrentWeapon = nullptr;
+
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_UpdateBulletCounter(0, 0);
+	}
 }
 
 void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage)
@@ -181,8 +237,12 @@ void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage)
 	BP_PlayFpsAnimMontage(Montage);
 }
 
-void APlayerCharacter::EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
+bool APlayerCharacter::TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
 {
+	if (IsWeaponAlreadyOwned(WeaponClass)) return false;
+	//todo: hacky
+	if (CurrentWeapon) OnWeaponDeactivated(CurrentWeapon);
+
 	// spawn the new weapon
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = this;
@@ -195,7 +255,11 @@ void APlayerCharacter::EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
 	if (!AddedWeapon)
 	{
 		UE_LOG(Khaled, Error, TEXT("APlayerCharacter::EquipWeapon - Failed to spawn weapon"));
+		return false;
 	}
+
+	OwnedWeapons.Add(AddedWeapon);
+	return true;
 }
 
 void APlayerCharacter::GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection)
@@ -228,7 +292,7 @@ void APlayerCharacter::OnShotFired()
 	{
 		PlayerUIRef->BP_ShotFired();
 	}
-	
+
 	if (AFpsPlayerController* FpsController = Cast<AFpsPlayerController>(GetController()))
 	{
 		auto test = FpsController->GetInteractionKeyText();

@@ -139,6 +139,9 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 	// Interaction Input
 	eic->BindAction(InteractAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnInteractionStarted);
 
+	// Cycle Weapons Input
+	eic->BindAction(CycleWeaponsAction, ETriggerEvent::Started, this, &AFpsPlayerController::CycleWeaponsStarted);
+	
 	SetupInputComponent();
 }
 
@@ -186,6 +189,11 @@ void AFpsPlayerController::OnReloadStarted()
 void AFpsPlayerController::OnInteractionStarted()
 {
 	CharacterRef->DoInteraction();
+}
+
+void AFpsPlayerController::CycleWeaponsStarted()
+{
+	CharacterRef->DoCycleWeapons();
 }
 
 FColor AFpsPlayerController::GetPlayerColor(int Index)

@@ -64,6 +64,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
 	TObjectPtr<UInputAction> InteractAction;
+
+	UPROPERTY(EditAnywhere, Category ="Input")
+	TObjectPtr<UInputAction> CycleWeaponsAction;
 	
 	UPROPERTY(BlueprintReadOnly, Category ="Reference")
 	TObjectPtr<APlayerCharacter> CharacterRef;
@@ -87,5 +90,6 @@ protected:
 	void OnLeftFireCompleted();
 	void OnReloadStarted();
 	void OnInteractionStarted();
+	void CycleWeaponsStarted();
 	FColor GetPlayerColor(int Index);
 };

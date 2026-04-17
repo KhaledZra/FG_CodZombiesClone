@@ -37,6 +37,7 @@ public:
 	void DoLeftFireStopped();
 	void DoReload();
 	void DoInteraction();
+	void DoCycleWeapons();
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);
 
@@ -64,11 +65,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category ="Weapons")
 	FName TpsWeaponSocket = FName("HandGrip_R");
 
-	UPROPERTY(EditAnywhere, Category="Weapons")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapons")
 	TObjectPtr<ABaseWeapon> CurrentWeapon;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Weapons")
+	TArray<TObjectPtr<ABaseWeapon>> OwnedWeapons;
+
 	UPROPERTY(EditAnywhere, Category="Weapons")
-	TSubclassOf<ABaseWeapon> StarterWeapon;
+	TArray<TSubclassOf<ABaseWeapon>> StarterWeapons;
 	
 	FTimerHandle EquipWeaponVisibilityTimer;
 	
@@ -80,7 +84,7 @@ protected:
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
 	virtual void PlayWeaponMontage(UAnimMontage* Montage) override;
-	virtual void EquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
+	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
 	virtual void AddRecoil(float RecoilStrength) override;
@@ -96,6 +100,8 @@ protected:
 	void CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex);
 	void SetPlayerIndex(int Index);
 	void SetPlayerColor(FColor Color) const;
+	void SpawnStarterWeapons();
+	bool IsWeaponAlreadyOwned(TSubclassOf<ABaseWeapon> WeaponClass);
 	
 	// IHealthUser interface
 	virtual void OnDeath() override;
