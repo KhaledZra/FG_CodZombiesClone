@@ -16,6 +16,7 @@ ASimpleActorSpawner::ASimpleActorSpawner()
 void ASimpleActorSpawner::SpawnActor(AActor* OldSpawnedActor)
 {
 	if (ActorClassToSpawn == nullptr) return;
+	// use .IsValid cause they wont be nullptr at this stage
 	// if (OldSpawnedActor != nullptr) return; // Not dead?
 	
 	FActorSpawnParameters SpawnParameters;

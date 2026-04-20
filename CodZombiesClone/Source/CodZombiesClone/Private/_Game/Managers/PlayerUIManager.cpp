@@ -32,6 +32,9 @@ void APlayerUIManager::AddPlayerUI(UPlayerUI* PlayerUI, int PlayerIndex)
 		// Syncs the real current score of old players with the new player
 		PlayerUI->BP_ScoreUpdated(PlayerUis[i]->PlayerRef->GetCurrentScore(), i);
 	}
+	
+	// Sync player with current wave
+	PlayerUI->BP_WaveUpdated(CurrentWaveCache);
 }
 
 void APlayerUIManager::UpdateUI(int NewScore, int PlayerIndex)
@@ -40,4 +43,15 @@ void APlayerUIManager::UpdateUI(int NewScore, int PlayerIndex)
 	{
 		ui->BP_ScoreUpdated(NewScore, PlayerIndex);
 	}
+}
+
+void APlayerUIManager::UpdateWave(int NewWave)
+{
+	for (UPlayerUI* ui : PlayerUis)
+	{
+		ui->BP_WaveUpdated(NewWave);
+	}
+	
+	// cache last wave for new players
+	CurrentWaveCache = NewWave;
 }

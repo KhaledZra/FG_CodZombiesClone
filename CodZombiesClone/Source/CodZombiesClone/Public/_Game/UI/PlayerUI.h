@@ -55,4 +55,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Update Interaction String"))
 	void BP_UpdateInteractionText(const FString& InteractionString);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Update Wave"))
+	void BP_WaveUpdated(const int NewWave);
 };

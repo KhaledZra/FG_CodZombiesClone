@@ -23,7 +23,13 @@ public:
 	UFUNCTION()
 	void UpdateUI(int NewScore, int PlayerIndex);
 	
+	UFUNCTION()
+	void UpdateWave(int NewWave);
+	
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	TArray<TObjectPtr<UPlayerUI>> PlayerUis;
+	
+	// Cached wave for easy access when new players join
+	int CurrentWaveCache = 1;
 };

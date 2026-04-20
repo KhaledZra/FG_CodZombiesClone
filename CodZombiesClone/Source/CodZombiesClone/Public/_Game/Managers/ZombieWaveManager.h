@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ZombieWaveManager.generated.h"
 
+class APlayerUIManager;
 class AZombieCharacter;
 class AZombieSpawner;
 
@@ -22,6 +23,9 @@ public:
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
+	TObjectPtr<APlayerUIManager> PlayerUIManagerRef;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
 	TArray<TObjectPtr<AZombieSpawner>> ZombieSpawners;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
@@ -30,9 +34,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
 	int ZombiesToSpawn = 0;
 	
-	int CurrentWaveIndex = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
+	float ZombieSpawnSpeed = 1.0f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
+	float WaveStartCooldown = 5.0f;
+	
+	int CurrentWaveIndex = -1;
 	int zombiesSpawned = 0;
-	int ZombiesAlive = 0;
+	//int ZombiesAliveLimit = 0; // this is only handly if we need a limit for how many zombies can be alive at once.
 	int ZombiesKilled = 0;
 	
 	bool bWaveActive = false;
@@ -40,7 +50,14 @@ protected:
 	UFUNCTION()
 	void OnZombieKilled();
 	
+	void SpawnIteration();
+	void StartWaveSpawner();
+	void StopWaveSpawner();
+	void TriggerNextWave();
+	
+	FTimerHandle WaveSpawnTimerHandle;
+	FTimerHandle WaveStartCooldownTimerHandle;
+	
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaSeconds) override;
 };
