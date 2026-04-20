@@ -31,6 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	bool TryUseScore(int Score);
 	
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCurrentScore() const;
 	
 	void DoLeftFireStarted();
@@ -84,6 +85,7 @@ protected:
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
 	virtual void PlayWeaponMontage(UAnimMontage* Montage) override;
+	UFUNCTION(BlueprintCallable)
 	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
