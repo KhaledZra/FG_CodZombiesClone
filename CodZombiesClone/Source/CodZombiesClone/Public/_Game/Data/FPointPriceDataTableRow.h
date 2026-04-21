@@ -8,5 +8,5 @@ struct FPointPriceDataTableRow : public FTableRowBase
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere)
-	int Cost;
+	int Cost = 0;
 };

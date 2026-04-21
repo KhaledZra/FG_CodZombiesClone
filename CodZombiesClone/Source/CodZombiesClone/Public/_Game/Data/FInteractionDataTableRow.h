@@ -27,7 +27,7 @@ struct FInteractionDataTableRow : public FTableRowBase
 	
 	/** enables interaction conditions */
 	UPROPERTY(EditAnywhere)
-	TEnumAsByte<EInteractionType> InteractionType;
+	TEnumAsByte<EInteractionType> InteractionType = Default;
 	
 	UPROPERTY(EditAnywhere)
 	FDataTableRowHandle PriceData;
