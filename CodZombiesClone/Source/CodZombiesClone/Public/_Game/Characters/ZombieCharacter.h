@@ -34,6 +34,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Animation")
 	TArray<TObjectPtr<UAnimMontage>> AttackMontages;
+	
+	UPROPERTY(EditAnywhere, Category="Animation")
+	TArray<TObjectPtr<UAnimMontage>> HurtAnimMontages;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage);
@@ -42,5 +45,8 @@ protected:
 
 protected:
 	virtual void BeginPlay() override;
+	
+	// IHealthUser
 	virtual void OnDeath() override;
+	virtual void OnHurt() override;
 };

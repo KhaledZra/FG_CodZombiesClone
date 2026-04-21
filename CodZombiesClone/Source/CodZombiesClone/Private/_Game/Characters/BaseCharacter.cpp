@@ -91,3 +91,8 @@ void ABaseCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHe
 	// Empty, overriden in other classes
 }
 
+void ABaseCharacter::OnHurt()
+{
+	// Stub
+}
+

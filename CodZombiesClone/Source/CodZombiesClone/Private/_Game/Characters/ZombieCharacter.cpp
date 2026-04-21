@@ -102,3 +102,11 @@ void AZombieCharacter::OnDeath()
 		                                       Destroy();
 	                                       }), 5.0f, false);
 }
+
+void AZombieCharacter::OnHurt()
+{
+	if (HurtAnimMontages.IsEmpty()) return;
+	
+	// todo: could be enhanced by playing based on hitlocation or by using PhysicalAnimations
+	BP_PlayAnimMontage(HurtAnimMontages[FMath::RandRange(0, HurtAnimMontages.Num() - 1)]);
+}

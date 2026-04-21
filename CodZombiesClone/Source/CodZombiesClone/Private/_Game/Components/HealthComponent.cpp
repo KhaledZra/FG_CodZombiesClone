@@ -58,7 +58,11 @@ void UHealthComponent::TakeDamage(const int& DamageAmount, const FString& BodyPa
 	int finalDamageAmount = BodyPartName.Equals("head", ESearchCase::IgnoreCase) ? DamageAmount * 2 : DamageAmount;
 	
 	CurrentHealth = FMath::Max(CurrentHealth - finalDamageAmount, 0);
-	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
+	if (HealthUser)
+	{
+		HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
+		HealthUser->OnHurt();
+	}
 
 	if (CurrentHealth <= 0)
 	{

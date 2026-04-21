@@ -23,5 +23,6 @@ class CODZOMBIESCLONE_API IHealthUser
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) = 0;
+	virtual void OnHurt() = 0;
 	virtual void OnDeath() = 0;
 };
