@@ -37,6 +37,8 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage);
+	
+	FTimerHandle OnDeathTimerHandle;
 
 protected:
 	virtual void BeginPlay() override;

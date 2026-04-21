@@ -4,6 +4,7 @@
 #include "_Game/Characters/ZombieCharacter.h"
 
 #include "CodZombiesClone.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "_Game/AIController/EnemyAIController.h"
@@ -85,5 +86,19 @@ void AZombieCharacter::OnDeath()
 		aic->StopAILogic();
 	}
 
-	Destroy();
+	// Precall this then clear it since it will broadcast again
+	OnDestroyed.Broadcast(this);
+	OnDestroyed.Clear();
+	
+	// Enable ragdoll
+	GetMesh()->SetCollisionProfileName("Ragdoll");
+	GetMesh()->SetSimulatePhysics(true);
+	// Bugs out players hand controller
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+	GetWorld()->GetTimerManager().SetTimer(OnDeathTimerHandle,
+	                                       FTimerDelegate::CreateLambda([this]
+	                                       {
+		                                       Destroy();
+	                                       }), 5.0f, false);
 }
