@@ -17,8 +17,12 @@ AZombieCharacter::AZombieCharacter()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
 	// Set 'bUseAccelerationForPaths = true' in bp
+	GetCharacterMovement()->MaxWalkSpeed = 100.0f;
+	// makes em turn smoother
+	GetCharacterMovement()->bUseControllerDesiredRotation = true;
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f);
 
 	GetMesh()->SetCollisionProfileName("Enemy");
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
