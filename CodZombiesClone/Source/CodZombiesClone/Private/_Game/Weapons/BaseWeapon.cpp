@@ -231,8 +231,6 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 	if (OutHit.bBlockingHit == false || OutHit.GetActor() == nullptr) return;
 	UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>();
 	if (HealthComp == nullptr || HealthComp->IsDead()) return;
-	UE_LOG(Khaled, Warning, TEXT("Hit Zombie! Bone: %s"), *OutHit.BoneName.ToString());
-	
 
 	bool bIsDead = false;
 	HealthComp->TakeDamage(GunDamage, OutHit.BoneName.ToString(), bIsDead);
