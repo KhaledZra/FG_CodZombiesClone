@@ -12,7 +12,7 @@ UCLASS()
 class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	TObjectPtr<USkeletalMeshComponent> FpsMesh;
 
@@ -22,31 +22,40 @@ class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int CurrentAmmo;
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int MagazineSize;
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float RecoilStrength;
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float FireRate;
 
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float BulletRange;
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	int GunDamage;
-	
+
 	UPROPERTY(VisibleAnywhere, Category= "Data")
 	bool bAutoFire;
+
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	bool bShotgunSpread;
+
+	UPROPERTY(VisibleAnywhere, Category= "Data")
+	int SpreadCount;
 	
 	UPROPERTY(VisibleAnywhere, Category= "Data")
+	float MaxSpreadDegree;
+
+	UPROPERTY(VisibleAnywhere, Category= "Data")
 	float ReloadLength;
-	
+
 	void StartFiring();
 	void StopFiring();
 	void Reload();
@@ -54,6 +63,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Mesh")
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
+
 	UFUNCTION(BlueprintCallable, Category="Mesh")
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
 
@@ -63,32 +73,32 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	FDataTableRowHandle WeaponData;
-	
+
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> FiringMontage;
-	
+
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> ReloadMontage;
-	
+
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> EquippedMontage;
-	
+
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> DryFireMontage;
-	
+
 	// weapon anims
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> WeaponReloadMontage;
-	
+
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> WeaponFireMontage;
-	
+
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
-	
+
 	// TScriptInterface if we need it in BP
 	IWeaponUser* WeaponUser;
-	
+
 	bool bFireCooldownActive = false;
 	bool bIsReloading = false;
 	FTimerHandle FireCooldownTimer;
@@ -97,10 +107,12 @@ protected:
 
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
-	
+
 	void Fire();
+	void FireBulletRay(const FVector& StartLocation, const FVector& Direction, const ETraceTypeQuery& TraceChannel,
+	                   const TArray<AActor*>& ActorsToIgnore, bool bDrawDebug);
 	void OnReloadComplete();
-	
+
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage);
 

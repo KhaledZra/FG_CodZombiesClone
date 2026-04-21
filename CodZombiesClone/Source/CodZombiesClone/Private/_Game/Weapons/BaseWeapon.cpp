@@ -4,6 +4,7 @@
 #include "_Game/Weapons/BaseWeapon.h"
 
 #include "CodZombiesClone.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "_Game/Components/HealthComponent.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
@@ -41,7 +42,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 	{
 		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
 		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
-		
+
 		FpsMesh->SetAnimInstanceClass(data->WeaponAnimInstanceClass);
 		TpsMesh->SetAnimInstanceClass(data->WeaponAnimInstanceClass);
 
@@ -49,10 +50,10 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		ReloadMontage = data->ReloadMontage.LoadSynchronous();
 		EquippedMontage = data->EquippedMontage.LoadSynchronous();
 		DryFireMontage = data->DryFireMontage.LoadSynchronous();
-		
+
 		WeaponReloadMontage = data->WeaponReloadMontage.LoadSynchronous();
 		WeaponFireMontage = data->WeaponFireMontage.LoadSynchronous();
-		
+
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
 
@@ -62,6 +63,9 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		BulletRange = data->BulletRange;
 		GunDamage = data->GunDamage;
 		bAutoFire = data->bAutoFire;
+		bShotgunSpread = data->bShotgunSpread;
+		SpreadCount = data->SpreadCount;
+		MaxSpreadDegree = data->MaxSpreadDegree;
 		ReloadLength = data->ReloadLength;
 	}
 }
@@ -69,7 +73,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	SetActorHiddenInGame(true);
 
 	// Ensure weapon destroys with owner
@@ -81,7 +85,7 @@ void ABaseWeapon::BeginPlay()
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
 	WeaponUser->AttachWeapon(this);
-	
+
 	WeaponUser->OnWeaponActivated(this);
 
 	UE_LOG(Khaled, Log, TEXT("Weapon BeginPlay"));
@@ -121,13 +125,13 @@ void ABaseWeapon::Reload()
 {
 	if (CurrentAmmo == MagazineSize) return;
 	if (bIsReloading) return;
-	
+
 	UE_LOG(Khaled, Log, TEXT("Reload Started"));
 	bIsReloading = true;
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer,
-										   this, &ABaseWeapon::OnReloadComplete,
-										   ReloadLength, false);
-	
+	                                       this, &ABaseWeapon::OnReloadComplete,
+	                                       ReloadLength, false);
+
 	WeaponUser->PlayWeaponMontage(ReloadMontage);
 	BP_PlayAnimMontage(WeaponReloadMontage);
 }
@@ -152,13 +156,6 @@ void ABaseWeapon::Fire()
 		WeaponUser->PlayWeaponMontage(DryFireMontage);
 		return;
 	}
-	
-	FVector startLocation = FVector::ZeroVector;
-	FVector direction = FVector::ZeroVector;
-	FVector endLocation = FVector::ZeroVector;
-
-	WeaponUser->GetTargetAimLocation(startLocation, direction);
-	endLocation = startLocation + (direction * BulletRange);
 
 	// Visual stuff
 	WeaponUser->PlayWeaponMontage(FiringMontage);
@@ -172,43 +169,29 @@ void ABaseWeapon::Fire()
 	WeaponUser->AddRecoil(RecoilStrength);
 
 	// Do the linetrace stuff
+	FVector startLocation = FVector::ZeroVector;
+	FVector direction = FVector::ZeroVector;
+	WeaponUser->GetTargetAimLocation(startLocation, direction);
 	ETraceTypeQuery TraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
-	bool bTraceComplex = true;
-	TArray<AActor*> ActorsToIgnore;
-	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::ForDuration;
-	FHitResult OutHit;
-	bool bIgnoreSelf = true;
 
 	// Get player actors
+	TArray<AActor*> ActorsToIgnore;
 	if (const AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
 	{
 		ActorsToIgnore = gm->PlayerActors;
 	}
 	else ActorsToIgnore.Add(GetOwner());
 
-	UKismetSystemLibrary::LineTraceSingle(GetWorld(), startLocation, endLocation, TraceChannel, bTraceComplex,
-	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
-
-	if (OutHit.bBlockingHit && OutHit.GetActor() != nullptr)
+	if (bShotgunSpread)
 	{
-		// Maybe uses the IDamagable interface?
-		UE_LOG(LogCodZombiesClone, Log, TEXT("%s"), *OutHit.BoneName.ToString());
-		
-		// Maybe has health comp?
-		if (UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>())
+		for (int i = 0; i < SpreadCount; i++)
 		{
-			// UE_LOG(Khaled, Display, TEXT("Hit Actor: %s"), *OutHit.GetActor()->GetName());
-			bool bIsDead = false;
-			HealthComp->TakeDamage(GunDamage, OutHit.BoneName.ToString(), bIsDead);
-			
-			// Todo: hardcoded points, change to a manager that register points better
-			// Normal hit equals 10 points
-			// Kill equals 50 points
-			// Headshot kill equals 100 points
-			bool bHeadshotKill = bIsDead && OutHit.BoneName.ToString().Equals("head", ESearchCase::IgnoreCase);
-			int pointsGained = bIsDead ? (bHeadshotKill ? 100 : 50) : 10;
-			WeaponUser->OnEnemyHit(pointsGained);
+			FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, true);
 		}
+	}
+	else
+	{
+		FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, true);
 	}
 
 	// If it's auto set a timer to keep firing
@@ -220,6 +203,48 @@ void ABaseWeapon::Fire()
 		                                       this, &ABaseWeapon::Fire,
 		                                       fireRate, false);
 	}
+}
+
+void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Direction,
+                                const ETraceTypeQuery& TraceChannel, const TArray<AActor*>& ActorsToIgnore,
+                                bool bDrawDebug)
+{
+	FVector endLocation = FVector::ZeroVector;
+	FVector direction = Direction;
+	
+	if (bShotgunSpread)
+	{
+		direction = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(Direction, MaxSpreadDegree);
+	}
+	
+	endLocation = StartLocation + (direction * BulletRange);
+	
+	
+	bool bTraceComplex = true;
+	EDrawDebugTrace::Type DrawDebugType = bDrawDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
+	FHitResult OutHit;
+	bool bIgnoreSelf = true;
+
+	UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartLocation, endLocation, TraceChannel, bTraceComplex,
+	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
+
+	if (OutHit.bBlockingHit == false || OutHit.GetActor() == nullptr) return;
+	UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>();
+	if (HealthComp == nullptr || HealthComp->IsDead()) return;
+	UE_LOG(Khaled, Warning, TEXT("Hit Zombie! Bone: %s"), *OutHit.BoneName.ToString());
+	
+
+	bool bIsDead = false;
+	HealthComp->TakeDamage(GunDamage, OutHit.BoneName.ToString(), bIsDead);
+
+	// Todo: hardcoded points, change to a manager that register points better
+	// Normal hit equals 10 points
+	// Kill equals 50 points
+	// Headshot kill equals 100 points
+
+	bool bHeadshotKill = bIsDead && OutHit.BoneName.ToString().Equals("head", ESearchCase::IgnoreCase);
+	int pointsGained = bIsDead ? (bHeadshotKill ? 100 : 50) : 10;
+	WeaponUser->OnEnemyHit(pointsGained);
 }
 
 void ABaseWeapon::OnReloadComplete()

@@ -30,6 +30,15 @@ struct FWeaponDataTableRow : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere)
 	bool bAutoFire = false;
+	
+	UPROPERTY(EditAnywhere)
+	bool bShotgunSpread = false;
+	
+	UPROPERTY(EditAnywhere)
+	int SpreadCount = 0;
+	
+	UPROPERTY(EditAnywhere)
+	float MaxSpreadDegree = 0;
 
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;

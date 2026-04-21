@@ -28,6 +28,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Die();
+	
+	UFUNCTION(BlueprintCallable, Category="Health")
+	bool IsDead();
 
 protected:
 	IHealthUser* HealthUser;

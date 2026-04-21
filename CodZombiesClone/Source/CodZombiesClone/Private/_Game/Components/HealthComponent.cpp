@@ -72,3 +72,8 @@ void UHealthComponent::Die()
 	if (HealthUser) HealthUser->OnDeath();
 	else GetOwner()->Destroy();
 }
+
+bool UHealthComponent::IsDead()
+{
+	return CurrentHealth <= 0;
+}
