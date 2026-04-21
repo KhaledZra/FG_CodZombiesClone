@@ -52,7 +52,9 @@ public:
 	void Reload();
 	void ActivateWeapon();
 
+	UFUNCTION(BlueprintCallable, Category="Mesh")
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
+	UFUNCTION(BlueprintCallable, Category="Mesh")
 	USkeletalMeshComponent* GetThirdPersonMesh() const { return TpsMesh; }
 
 	const TSubclassOf<UAnimInstance>& GetFirstPersonAnimInstanceClass() const { return FirstPersonAnimInstanceClass; }
@@ -61,7 +63,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
 	FDataTableRowHandle WeaponData;
-
+	
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> FiringMontage;
 	
@@ -73,6 +75,13 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> DryFireMontage;
+	
+	// weapon anims
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> WeaponReloadMontage;
+	
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> WeaponFireMontage;
 	
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
@@ -91,6 +100,9 @@ protected:
 	
 	void Fire();
 	void OnReloadComplete();
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
+	void BP_PlayAnimMontage(UAnimMontage* Montage);
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

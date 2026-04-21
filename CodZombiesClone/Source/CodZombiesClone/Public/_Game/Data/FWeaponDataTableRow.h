@@ -37,21 +37,30 @@ struct FWeaponDataTableRow : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<USkeletalMesh> TpsWeaponMesh;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<UAnimMontage> FiringMontage;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<UAnimMontage> ReloadMontage;
 		
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<UAnimMontage> EquippedMontage;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<UAnimMontage> DryFireMontage;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	TSoftObjectPtr<UAnimMontage> WeaponReloadMontage;
+	
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	TSoftObjectPtr<UAnimMontage> WeaponFireMontage;
+	
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSubclassOf<UAnimInstance> FirstPersonAnimInstanceClass;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSubclassOf<UAnimInstance> ThirdPersonAnimInstanceClass;
+	
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	TSubclassOf<UAnimInstance> WeaponAnimInstanceClass;
 };

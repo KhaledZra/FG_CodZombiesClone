@@ -41,11 +41,17 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 	{
 		FpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
 		TpsMesh->SetSkeletalMesh(data->FpsWeaponMesh.LoadSynchronous());
+		
+		FpsMesh->SetAnimInstanceClass(data->WeaponAnimInstanceClass);
+		TpsMesh->SetAnimInstanceClass(data->WeaponAnimInstanceClass);
 
 		FiringMontage = data->FiringMontage.LoadSynchronous();
 		ReloadMontage = data->ReloadMontage.LoadSynchronous();
 		EquippedMontage = data->EquippedMontage.LoadSynchronous();
-		DryFireMontage = data->DryFireMontage.LoadSynchronous(); // Not used cause it looks wonky.
+		DryFireMontage = data->DryFireMontage.LoadSynchronous();
+		
+		WeaponReloadMontage = data->WeaponReloadMontage.LoadSynchronous();
+		WeaponFireMontage = data->WeaponFireMontage.LoadSynchronous();
 		
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
@@ -123,6 +129,7 @@ void ABaseWeapon::Reload()
 										   ReloadLength, false);
 	
 	WeaponUser->PlayWeaponMontage(ReloadMontage);
+	BP_PlayAnimMontage(WeaponReloadMontage);
 }
 
 void ABaseWeapon::ActivateWeapon()
@@ -155,6 +162,7 @@ void ABaseWeapon::Fire()
 
 	// Visual stuff
 	WeaponUser->PlayWeaponMontage(FiringMontage);
+	BP_PlayAnimMontage(WeaponFireMontage);
 
 	CurrentAmmo--;
 	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
