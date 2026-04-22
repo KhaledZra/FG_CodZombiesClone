@@ -3,7 +3,26 @@
 
 #include "Public/_Game/GameModes/FpsGameMode.h"
 
+#include "CodZombiesClone.h"
+#include "_Game/Characters/PlayerCharacter.h"
+
 AFpsGameMode::AFpsGameMode()
 {
 	// Stub
+}
+
+TArray<APlayerCharacter*> AFpsGameMode::GetAlivePlayerActors()
+{
+	TArray<APlayerCharacter*> AlivePlayerActors;
+
+	for (APlayerCharacter* player : PlayerActors)
+	{
+		if (!player->GetIsDowned())
+		{
+			AlivePlayerActors.Add(player);
+			UE_LOG(Khaled, Warning, TEXT("player: %s"), *player->GetActorLocation().ToString());
+		}
+	}
+
+	return AlivePlayerActors;
 }

@@ -19,5 +19,8 @@ public:
 	AFpsGameMode();
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Global")
-	TArray<TObjectPtr<AActor>> PlayerActors;
+	TArray<TObjectPtr<APlayerCharacter>> PlayerActors;
+
+	UFUNCTION(BlueprintCallable, Category = "Global")
+	TArray<APlayerCharacter*> GetAlivePlayerActors();
 };

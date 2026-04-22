@@ -6,6 +6,7 @@
 #include "CodZombiesClone.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "_Game/Characters/PlayerCharacter.h"
 #include "_Game/Components/HealthComponent.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
 #include "_Game/GameModes/FpsGameMode.h"
@@ -178,7 +179,10 @@ void ABaseWeapon::Fire()
 	TArray<AActor*> ActorsToIgnore;
 	if (const AFpsGameMode* gm = GetWorld()->GetAuthGameMode<AFpsGameMode>())
 	{
-		ActorsToIgnore = gm->PlayerActors;
+		for (AActor* actor : gm->PlayerActors)
+		{
+			ActorsToIgnore.Add(actor);
+		}
 	}
 	else ActorsToIgnore.Add(GetOwner());
 

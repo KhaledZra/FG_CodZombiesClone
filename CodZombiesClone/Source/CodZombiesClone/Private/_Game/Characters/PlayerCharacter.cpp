@@ -93,7 +93,8 @@ bool APlayerCharacter::IsWeaponAlreadyOwned(TSubclassOf<ABaseWeapon> WeaponClass
 
 void APlayerCharacter::OnDeath()
 {
-	FpsControllerRef->StopReadingInputs();
+	//FpsControllerRef->StopReadingInputs();
+	bIsDowned = true;
 	// todo: death stuff? maybe go to downed state?
 	BP_PlayDeathAnimMontage();
 }
@@ -183,6 +184,11 @@ void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor P
 	{
 		FpsControllerRef = fpsCont;
 	}
+}
+
+bool APlayerCharacter::GetIsDowned() const
+{
+	return bIsDowned;
 }
 
 // Right now this is called inside the BaseWeapon BeginPlay

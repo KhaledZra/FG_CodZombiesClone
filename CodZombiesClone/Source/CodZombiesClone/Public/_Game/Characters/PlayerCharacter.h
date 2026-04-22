@@ -42,6 +42,8 @@ public:
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);
 
+	bool GetIsDowned() const;
+
 protected:
 	
 	UPROPERTY(EditAnywhere, Category ="UI")
@@ -57,6 +59,9 @@ protected:
 	int CurrentScore;
 	
 	int PlayerIndex;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="State")
+	bool bIsDowned = false;
 
 	/** Name of the first person mesh weapon socket */
 	UPROPERTY(EditAnywhere, Category ="Weapons")
