@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "_Game/Data/FWeaponStats.h"
 #include "BaseWeapon.generated.h"
 
 class IWeaponUser;
@@ -22,44 +23,23 @@ class CODZOMBIESCLONE_API ABaseWeapon : public AActor
 public:
 	// Sets default values for this actor's properties
 	ABaseWeapon();
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	int CurrentAmmo;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	int MagazineSize;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	float RecoilStrength;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	float FireRate;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	float BulletRange;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	int GunDamage;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	bool bAutoFire;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	bool bShotgunSpread;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	int SpreadCount;
 	
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	float MaxSpreadDegree;
-
-	UPROPERTY(VisibleAnywhere, Category= "Data")
-	float ReloadLength;
+	UPROPERTY(VisibleAnywhere, Category="Data")
+	FWeaponStats CurrentWeaponStats;
+	
+	UPROPERTY(VisibleAnywhere, Category="Data")
+	int CurrentAmmo;
 
 	void StartFiring();
 	void StopFiring();
 	void Reload();
 	void ActivateWeapon();
+	
+	UFUNCTION(BlueprintCallable, Category="Upgrade")
+	bool CanUpgradeWeapon() const;
+	
+	UFUNCTION(BlueprintCallable, Category="Upgrade")
+	bool TryUpgradeWeapon();
 
 	UFUNCTION(BlueprintCallable, Category="Mesh")
 	USkeletalMeshComponent* GetFirstPersonMesh() const { return FpsMesh; }
@@ -104,6 +84,9 @@ protected:
 	FTimerHandle FireCooldownTimer;
 	FTimerHandle AutoFireTimer;
 	FTimerHandle ReloadTimer;
+	
+	int CurrentWeaponLevel = 0;
+	int MaxWeaponLevel = 0;
 
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
@@ -112,6 +95,7 @@ protected:
 	void FireBulletRay(const FVector& StartLocation, const FVector& Direction, const ETraceTypeQuery& TraceChannel,
 	                   const TArray<AActor*>& ActorsToIgnore, bool bDrawDebug);
 	void OnReloadComplete();
+	void SwitchWeaponStats(int WeaponLevel);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage);

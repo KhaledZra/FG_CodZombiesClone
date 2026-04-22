@@ -2,48 +2,20 @@
 
 #include "FWeaponDataTableRow.generated.h"
 
+struct FWeaponStats;
+
 USTRUCT(BlueprintType)
 struct FWeaponDataTableRow : public FTableRowBase
 {
 	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, Category="Weapon")
+	TArray<FWeaponStats> WeaponStatsArray;
 
-	UPROPERTY(EditAnywhere)
-	int MagazineSize = 0;
-
-	UPROPERTY(EditAnywhere)
-	int StartingReserveAmmoCount = 0;
-	
-	UPROPERTY(EditAnywhere)
-	float RecoilStrength = 0;
-	
-	UPROPERTY(EditAnywhere)
-	float FireRate = 0;
-
-	UPROPERTY(EditAnywhere)
-	float BulletRange = 0;
-	
-	UPROPERTY(EditAnywhere)
-	int GunDamage = 0;
-	
-	UPROPERTY(EditAnywhere)
-	float ReloadLength = 0;
-	
-	UPROPERTY(EditAnywhere)
-	bool bAutoFire = false;
-	
-	UPROPERTY(EditAnywhere)
-	bool bShotgunSpread = false;
-	
-	UPROPERTY(EditAnywhere)
-	int SpreadCount = 0;
-	
-	UPROPERTY(EditAnywhere)
-	float MaxSpreadDegree = 0;
-
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<USkeletalMesh> FpsWeaponMesh;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Player")
 	TSoftObjectPtr<USkeletalMesh> TpsWeaponMesh;
 	
 	UPROPERTY(EditAnywhere, Category="Player")

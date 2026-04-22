@@ -9,6 +9,7 @@
 #include "_Game/Characters/PlayerCharacter.h"
 #include "_Game/Components/HealthComponent.h"
 #include "_Game/Data/FWeaponDataTableRow.h"
+#include "_Game/Data/FWeaponStats.h"
 #include "_Game/GameModes/FpsGameMode.h"
 #include "_Game/Interfaces/WeaponUser.h"
 
@@ -57,17 +58,11 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
-
-		MagazineSize = data->MagazineSize;
-		RecoilStrength = data->RecoilStrength;
-		FireRate = data->FireRate;
-		BulletRange = data->BulletRange;
-		GunDamage = data->GunDamage;
-		bAutoFire = data->bAutoFire;
-		bShotgunSpread = data->bShotgunSpread;
-		SpreadCount = data->SpreadCount;
-		MaxSpreadDegree = data->MaxSpreadDegree;
-		ReloadLength = data->ReloadLength;
+		
+		if (data->WeaponStatsArray.IsEmpty()) return;
+		CurrentWeaponStats = data->WeaponStatsArray[0];
+		CurrentWeaponLevel = 0;
+		MaxWeaponLevel = data->WeaponStatsArray.Num() - 1;
 	}
 }
 
@@ -81,7 +76,7 @@ void ABaseWeapon::BeginPlay()
 	GetOwner()->OnDestroyed.AddDynamic(this, &ABaseWeapon::OnOwnerDestroyed);
 
 	// Always starts fully reloaded
-	CurrentAmmo = MagazineSize;
+	CurrentAmmo = CurrentWeaponStats.MagazineSize;
 
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
@@ -102,12 +97,12 @@ void ABaseWeapon::StartFiring()
 		return;
 	}
 
-	if (!FMath::IsNearlyEqual(FireRate, 0.0f))
+	if (!FMath::IsNearlyEqual(CurrentWeaponStats.FireRate, 0.0f))
 	{
 		bFireCooldownActive = true;
 		GetWorld()->GetTimerManager().SetTimer(FireCooldownTimer,
 		                                       FTimerDelegate::CreateLambda([this] { bFireCooldownActive = false; }),
-		                                       FireRate, false);
+		                                       CurrentWeaponStats.FireRate, false);
 	}
 
 	Fire();
@@ -115,7 +110,7 @@ void ABaseWeapon::StartFiring()
 
 void ABaseWeapon::StopFiring()
 {
-	if (bAutoFire) // Timer is only used when u auto fire
+	if (CurrentWeaponStats.bAutoFire) // Timer is only used when u auto fire
 	{
 		UE_LOG(Khaled, Log, TEXT("Auto Fire Stopped"));
 		GetWorld()->GetTimerManager().ClearTimer(AutoFireTimer);
@@ -124,14 +119,14 @@ void ABaseWeapon::StopFiring()
 
 void ABaseWeapon::Reload()
 {
-	if (CurrentAmmo == MagazineSize) return;
+	if (CurrentAmmo == CurrentWeaponStats.MagazineSize) return;
 	if (bIsReloading) return;
 
 	UE_LOG(Khaled, Log, TEXT("Reload Started"));
 	bIsReloading = true;
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer,
 	                                       this, &ABaseWeapon::OnReloadComplete,
-	                                       ReloadLength, false);
+	                                       CurrentWeaponStats.ReloadLength, false);
 
 	WeaponUser->PlayWeaponMontage(ReloadMontage);
 	BP_PlayAnimMontage(WeaponReloadMontage);
@@ -140,8 +135,23 @@ void ABaseWeapon::Reload()
 void ABaseWeapon::ActivateWeapon()
 {
 	// Update UI
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, CurrentWeaponStats.MagazineSize);
 	WeaponUser->PlayWeaponMontage(EquippedMontage);
+}
+
+bool ABaseWeapon::CanUpgradeWeapon() const
+{
+	return CurrentWeaponLevel < MaxWeaponLevel;
+}
+
+bool ABaseWeapon::TryUpgradeWeapon()
+{
+	if (CanUpgradeWeapon() == false) return false;
+	
+	SwitchWeaponStats(CurrentWeaponLevel + 1);
+	CurrentAmmo = CurrentWeaponStats.MagazineSize;
+	ActivateWeapon();
+	return true;
 }
 
 void ABaseWeapon::OnOwnerDestroyed(AActor* DestroyedActor)
@@ -163,11 +173,11 @@ void ABaseWeapon::Fire()
 	BP_PlayAnimMontage(WeaponFireMontage);
 
 	CurrentAmmo--;
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, CurrentWeaponStats.MagazineSize);
 	WeaponUser->OnShotFired();
 
 	// Recoil
-	WeaponUser->AddRecoil(RecoilStrength);
+	WeaponUser->AddRecoil(CurrentWeaponStats.RecoilStrength);
 
 	// Do the linetrace stuff
 	FVector startLocation = FVector::ZeroVector;
@@ -186,9 +196,9 @@ void ABaseWeapon::Fire()
 	}
 	else ActorsToIgnore.Add(GetOwner());
 
-	if (bShotgunSpread)
+	if (CurrentWeaponStats.bShotgunSpread)
 	{
-		for (int i = 0; i < SpreadCount; i++)
+		for (int i = 0; i < CurrentWeaponStats.SpreadCount; i++)
 		{
 			FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, true);
 		}
@@ -199,10 +209,10 @@ void ABaseWeapon::Fire()
 	}
 
 	// If it's auto set a timer to keep firing
-	if (bAutoFire)
+	if (CurrentWeaponStats.bAutoFire)
 	{
 		// UE_LOG(Khaled, Log, TEXT("Auto Fire Triggered"));
-		float fireRate = FMath::IsNearlyEqual(FireRate, 0.0f) ? 0.01f : FireRate;
+		float fireRate = FMath::IsNearlyEqual(CurrentWeaponStats.FireRate, 0.0f) ? 0.01f : CurrentWeaponStats.FireRate;
 		GetWorld()->GetTimerManager().SetTimer(AutoFireTimer,
 		                                       this, &ABaseWeapon::Fire,
 		                                       fireRate, false);
@@ -216,12 +226,12 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 	FVector endLocation = FVector::ZeroVector;
 	FVector direction = Direction;
 	
-	if (bShotgunSpread)
+	if (CurrentWeaponStats.bShotgunSpread)
 	{
-		direction = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(Direction, MaxSpreadDegree);
+		direction = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(Direction, CurrentWeaponStats.MaxSpreadDegree);
 	}
 	
-	endLocation = StartLocation + (direction * BulletRange);
+	endLocation = StartLocation + (direction * CurrentWeaponStats.BulletRange);
 	
 	
 	bool bTraceComplex = true;
@@ -237,7 +247,7 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 	if (HealthComp == nullptr || HealthComp->IsDead()) return;
 
 	bool bIsDead = false;
-	HealthComp->TakeDamage(GunDamage, OutHit.BoneName.ToString(), bIsDead);
+	HealthComp->TakeDamage(CurrentWeaponStats.GunDamage, OutHit.BoneName.ToString(), bIsDead);
 
 	// Todo: hardcoded points, change to a manager that register points better
 	// Normal hit equals 10 points
@@ -251,7 +261,17 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 
 void ABaseWeapon::OnReloadComplete()
 {
-	CurrentAmmo = MagazineSize;
-	WeaponUser->UpdateWeaponHud(CurrentAmmo, MagazineSize);
+	CurrentAmmo = CurrentWeaponStats.MagazineSize;
+	WeaponUser->UpdateWeaponHud(CurrentAmmo, CurrentWeaponStats.MagazineSize);
 	bIsReloading = false;
+}
+
+void ABaseWeapon::SwitchWeaponStats(int WeaponLevel)
+{
+	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
+	{
+		if (data->WeaponStatsArray.IsEmpty()) return;
+		CurrentWeaponStats = data->WeaponStatsArray[WeaponLevel];
+		CurrentWeaponLevel = WeaponLevel;
+	}
 }
