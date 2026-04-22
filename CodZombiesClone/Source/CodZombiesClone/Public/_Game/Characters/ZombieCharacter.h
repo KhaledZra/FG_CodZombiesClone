@@ -6,6 +6,7 @@
 #include "BaseCharacter.h"
 #include "ZombieCharacter.generated.h"
 
+struct FZombieStats;
 class AEnemyAIController;
 class UStateTreeAIComponent;
 
@@ -21,6 +22,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AttackForward();
+	
+	void SetupZombie(FZombieStats Stats);
 
 protected:
 	UPROPERTY(EditAnywhere, Category="Attack")

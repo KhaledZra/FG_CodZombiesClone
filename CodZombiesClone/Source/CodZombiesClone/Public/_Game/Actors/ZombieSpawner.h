@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ZombieSpawner.generated.h"
 
+struct FZombieStats;
 class AZombieCharacter;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FZombieKilledDelegate);
 
@@ -20,7 +21,7 @@ public:
 	
 	FZombieKilledDelegate OnZombieKilled;
 	
-	bool TrySpawnZombie(const TSubclassOf<AZombieCharacter>& ZombieClass);
+	bool TrySpawnZombie(const TSubclassOf<AZombieCharacter>& ZombieClass, const FZombieStats& Stats);
 	// on zombie death?
 	
 protected:

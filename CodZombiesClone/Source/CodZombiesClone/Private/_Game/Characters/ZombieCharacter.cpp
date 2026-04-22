@@ -10,6 +10,7 @@
 #include "_Game/AIController/EnemyAIController.h"
 #include "_Game/Characters/PlayerCharacter.h"
 #include "_Game/Components/HealthComponent.h"
+#include "_Game/Managers/ZombieWaveManager.h"
 
 
 // Sets default values
@@ -70,6 +71,13 @@ void AZombieCharacter::AttackForward()
 			hc->TakeDamage(AttackDamage, "", bIsDead);
 		}
 	}
+}
+
+void AZombieCharacter::SetupZombie(FZombieStats Stats)
+{
+	AttackDamage = Stats.Damage;
+	GetCharacterMovement()->MaxWalkSpeed = Stats.Speed;
+	HealthComponent->SetMaxHealth(Stats.Health);
 }
 
 void AZombieCharacter::BeginPlay()

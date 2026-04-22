@@ -10,6 +10,16 @@ class APlayerUIManager;
 class AZombieCharacter;
 class AZombieSpawner;
 
+USTRUCT()
+struct FZombieStats
+{
+	GENERATED_BODY()
+	
+	int Health = 20;
+	int Speed = 150;
+	int Damage = 50;
+};
+
 UCLASS()
 class CODZOMBIESCLONE_API AZombieWaveManager : public AActor
 {
@@ -54,6 +64,8 @@ protected:
 	void StartWaveSpawner();
 	void StopWaveSpawner();
 	void TriggerNextWave();
+	
+	void CalcScaledZombieStats(FZombieStats& OutStats) const;
 	
 	FTimerHandle WaveSpawnTimerHandle;
 	FTimerHandle WaveStartCooldownTimerHandle;

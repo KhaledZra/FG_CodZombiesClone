@@ -95,7 +95,6 @@ void APlayerCharacter::OnDeath()
 {
 	FpsControllerRef->SwitchDownedInputs();
 	bIsDowned = true;
-	// todo: death stuff? maybe go to downed state?
 	BP_PlayDeathAnimMontage();
 }
 

@@ -61,7 +61,9 @@ void AZombieWaveManager::SpawnIteration()
 	if (!bWaveActive) return;
 
 	AZombieSpawner* rndSpawner = ZombieSpawners[FMath::RandRange(0, ZombieSpawners.Num() - 1)];
-	bool bIsSpawned = rndSpawner->TrySpawnZombie(ZombieClass);
+	FZombieStats scaledStats;
+	CalcScaledZombieStats(scaledStats);
+	bool bIsSpawned = rndSpawner->TrySpawnZombie(ZombieClass, scaledStats);
 
 	if (!bIsSpawned) return;
 
@@ -106,4 +108,16 @@ void AZombieWaveManager::TriggerNextWave()
 	
 	GetWorld()->GetTimerManager().SetTimer(WaveStartCooldownTimerHandle, this, &AZombieWaveManager::StartWaveSpawner,
 	                                       WaveStartCooldown, false);
+	
+	// Mostly for debugging
+	FZombieStats OutStats;
+	CalcScaledZombieStats(OutStats);
+	UE_LOG(Khaled, Warning, TEXT("Zombie Stats - Health: %i | Speed: %i | Damage: %i"), OutStats.Health, OutStats.Speed, OutStats.Damage);
+}
+
+void AZombieWaveManager::CalcScaledZombieStats(FZombieStats& OutStats) const
+{
+	OutStats.Damage = 50;
+	OutStats.Health = FMath::Min(20 + (CurrentWaveIndex * 5), 100);
+	OutStats.Speed = FMath::Min(150 + (CurrentWaveIndex * 50), 300);
 }

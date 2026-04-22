@@ -20,7 +20,6 @@ TArray<APlayerCharacter*> AFpsGameMode::GetAlivePlayerActors()
 		if (!player->GetIsDowned())
 		{
 			AlivePlayerActors.Add(player);
-			UE_LOG(Khaled, Warning, TEXT("player: %s"), *player->GetActorLocation().ToString());
 		}
 	}
 

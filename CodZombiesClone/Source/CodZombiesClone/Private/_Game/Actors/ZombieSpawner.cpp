@@ -5,6 +5,7 @@
 
 #include "CodZombiesClone.h"
 #include "_Game/Characters/ZombieCharacter.h"
+#include "_Game/Managers/ZombieWaveManager.h"
 
 
 // Sets default values
@@ -14,7 +15,7 @@ AZombieSpawner::AZombieSpawner()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-bool AZombieSpawner::TrySpawnZombie(const TSubclassOf<AZombieCharacter>& ZombieClass)
+bool AZombieSpawner::TrySpawnZombie(const TSubclassOf<AZombieCharacter>& ZombieClass, const FZombieStats& Stats)
 {
 	if (ZombieClass == nullptr) return false;
 	
@@ -24,6 +25,7 @@ bool AZombieSpawner::TrySpawnZombie(const TSubclassOf<AZombieCharacter>& ZombieC
 	
 	AZombieCharacter* CurrentSpawnedActor = GetWorld()->SpawnActor<AZombieCharacter>(ZombieClass, GetActorLocation(), FRotator::ZeroRotator,
 														 SpawnParameters);
+	CurrentSpawnedActor->SetupZombie(Stats);
 	if (CurrentSpawnedActor == nullptr)
 	{
 		UE_LOG(Khaled, Error, TEXT("AZombieSpawner::TrySpawnZombie - Failed To Spawn Actor"));
