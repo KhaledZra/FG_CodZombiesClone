@@ -37,12 +37,21 @@ public:
 	UFUNCTION()
 	void StopReadingInputs() const;
 	
+	UFUNCTION()
+	void SwitchDownedInputs() const;
+	
+	UFUNCTION()
+	void SwitchPlayingInputs() const;
+	
 	FNewControllerAtivatedDelegate OnNewControllerActivated;
 
 protected:
 	
 	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
 	TArray<TObjectPtr<UInputMappingContext>> DefaultMappingContexts;
+	
+	UPROPERTY(EditAnywhere, Category="Input|Input Mappings")
+	TObjectPtr<UInputMappingContext> DownedMappingContext;
 	
 	UPROPERTY(EditAnywhere, Category ="Input")
 	TObjectPtr<UInputAction> JumpAction;

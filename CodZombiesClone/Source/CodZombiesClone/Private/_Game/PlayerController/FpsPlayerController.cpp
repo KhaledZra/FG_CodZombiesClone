@@ -57,6 +57,35 @@ void AFpsPlayerController::StopReadingInputs() const
 	}
 }
 
+void AFpsPlayerController::SwitchDownedInputs() const
+{
+	StopReadingInputs();
+	
+	if (!IsLocalPlayerController()) return;
+	
+	// Add Input Mapping Context
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(DownedMappingContext, 0);
+	}
+}
+
+void AFpsPlayerController::SwitchPlayingInputs() const
+{
+	StopReadingInputs();
+	
+	if (!IsLocalPlayerController()) return;
+	
+	// Add Input Mapping Context
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
+		{
+			Subsystem->AddMappingContext(CurrentContext, 0);
+		}
+	}
+}
+
 void AFpsPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -96,17 +125,8 @@ void AFpsPlayerController::OnPossess(APawn* InPawn)
 void AFpsPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
-	if (!IsLocalPlayerController()) return;
 	
-	// Add Input Mapping Context
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
-		{
-			Subsystem->AddMappingContext(CurrentContext, 0);
-		}
-	}
+	SwitchPlayingInputs();
 }
 
 void AFpsPlayerController::SetupPlayerInputBinds()
