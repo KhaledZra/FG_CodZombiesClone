@@ -35,10 +35,10 @@ ABaseWeapon::ABaseWeapon()
 	TpsMesh->bOwnerNoSee = true;
 }
 
-void ABaseWeapon::OnConstruction(const FTransform& Transform)
+void ABaseWeapon::SetupWeapon(FDataTableRowHandle WeaponData)
 {
-	Super::OnConstruction(Transform);
-
+	CurrentWeaponData = WeaponData;
+	
 	// Cache data from the data table
 	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
 	{
@@ -65,12 +65,7 @@ void ABaseWeapon::OnConstruction(const FTransform& Transform)
 		MaxWeaponLevel = data->WeaponStatsArray.Num() - 1;
 		CurrentReloadAnimLength = ReloadMontage->GetPlayLength();
 	}
-}
-
-void ABaseWeapon::BeginPlay()
-{
-	Super::BeginPlay();
-
+	
 	SetActorHiddenInGame(true);
 
 	// Ensure weapon destroys with owner
@@ -82,10 +77,12 @@ void ABaseWeapon::BeginPlay()
 	// Cache Weapon User & Attach to user
 	WeaponUser = Cast<IWeaponUser>(GetOwner());
 	WeaponUser->AttachWeapon(this);
-
 	WeaponUser->OnWeaponActivated(this);
+}
 
-	UE_LOG(Khaled, Log, TEXT("Weapon BeginPlay"));
+FName ABaseWeapon::GetDataRowName()
+{
+	return CurrentWeaponData.RowName;
 }
 
 void ABaseWeapon::StartFiring()
@@ -271,7 +268,7 @@ void ABaseWeapon::OnReloadComplete()
 
 void ABaseWeapon::SwitchWeaponStats(int WeaponLevel)
 {
-	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
+	if (FWeaponDataTableRow* data = CurrentWeaponData.GetRow<FWeaponDataTableRow>(FString()))
 	{
 		if (data->WeaponStatsArray.IsEmpty()) return;
 		CurrentWeaponStats = data->WeaponStatsArray[WeaponLevel];

@@ -13,6 +13,18 @@ class AFpsPlayerController;
 class UInteractionComponent;
 class ABaseWeapon;
 
+USTRUCT()
+struct FStarterWeapon
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere)
+	FDataTableRowHandle WeaponData;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ABaseWeapon> WeaponClass;
+};
+
 UCLASS()
 class CODZOMBIESCLONE_API APlayerCharacter : public ABaseCharacter, public IWeaponUser, public IInteractionUser
 {
@@ -78,7 +90,7 @@ protected:
 	TArray<TObjectPtr<ABaseWeapon>> OwnedWeapons;
 
 	UPROPERTY(EditAnywhere, Category="Weapons")
-	TArray<TSubclassOf<ABaseWeapon>> StarterWeapons;
+	TArray<FStarterWeapon> StarterWeapons;
 	
 	FTimerHandle EquipWeaponVisibilityTimer;
 	
@@ -91,7 +103,7 @@ protected:
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
 	virtual void PlayWeaponMontage(UAnimMontage* Montage, float PlayRate = 1.0f) override;
 	UFUNCTION(BlueprintCallable)
-	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
+	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass, FDataTableRowHandle WeaponData) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) override;
 	virtual void AddRecoil(float RecoilStrength) override;
@@ -108,7 +120,7 @@ protected:
 	void SetPlayerIndex(int Index);
 	void SetPlayerColor(FColor Color) const;
 	void SpawnStarterWeapons();
-	bool IsWeaponAlreadyOwned(TSubclassOf<ABaseWeapon> WeaponClass);
+	bool IsWeaponAlreadyOwned(const FDataTableRowHandle& WeaponData) const;
 	
 	// IHealthUser interface
 	virtual void OnDeath() override;

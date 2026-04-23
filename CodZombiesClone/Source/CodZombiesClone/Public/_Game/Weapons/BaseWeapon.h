@@ -33,6 +33,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category="Data")
 	int CurrentReloadAnimLength;
 
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void SetupWeapon(FDataTableRowHandle WeaponData);
+	
+	UFUNCTION(BlueprintCallable, Category="Data")
+	FName GetDataRowName();
+	
 	void StartFiring();
 	void StopFiring();
 	void Reload();
@@ -55,7 +61,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Data")
-	FDataTableRowHandle WeaponData;
+	FDataTableRowHandle CurrentWeaponData;
 
 	UPROPERTY()
 	TObjectPtr<UAnimMontage> FiringMontage;
@@ -102,8 +108,4 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage, float PlayRate = 1.0f);
-
-protected:
-	virtual void OnConstruction(const FTransform& Transform) override;
-	virtual void BeginPlay() override;
 };

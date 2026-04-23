@@ -73,21 +73,21 @@ void APlayerCharacter::SpawnStarterWeapons()
 {
 	if (StarterWeapons.IsEmpty()) return;
 
-	for (TSubclassOf<ABaseWeapon> weapon : StarterWeapons)
+	for (const FStarterWeapon weapon : StarterWeapons)
 	{
-		TryEquipWeapon(weapon);
+		TryEquipWeapon(weapon.WeaponClass, weapon.WeaponData);
 	}
 }
 
-bool APlayerCharacter::IsWeaponAlreadyOwned(TSubclassOf<ABaseWeapon> WeaponClass)
+bool APlayerCharacter::IsWeaponAlreadyOwned(const FDataTableRowHandle& WeaponData) const
 {
 	if (OwnedWeapons.IsEmpty()) return false;
 
-	for (ABaseWeapon* Element : OwnedWeapons)
+	for (ABaseWeapon* weapon : OwnedWeapons)
 	{
-		if (Element->IsA(WeaponClass)) return true;
+		if (weapon->GetDataRowName() == WeaponData.RowName) return true;
 	}
-
+	
 	return false;
 }
 
@@ -242,9 +242,9 @@ void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage, float PlayRate)
 	BP_PlayFpsAnimMontage(Montage, PlayRate);
 }
 
-bool APlayerCharacter::TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
+bool APlayerCharacter::TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass, FDataTableRowHandle WeaponData)
 {
-	if (IsWeaponAlreadyOwned(WeaponClass)) return false;
+	if (IsWeaponAlreadyOwned(WeaponData)) return false;
 	//todo: hacky
 	if (CurrentWeapon) OnWeaponDeactivated(CurrentWeapon);
 
@@ -263,6 +263,7 @@ bool APlayerCharacter::TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
 		return false;
 	}
 
+	AddedWeapon->SetupWeapon(WeaponData);
 	OwnedWeapons.Add(AddedWeapon);
 	return true;
 }

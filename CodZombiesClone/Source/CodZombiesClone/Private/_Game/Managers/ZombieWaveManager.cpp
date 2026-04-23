@@ -37,7 +37,7 @@ void AZombieWaveManager::BeginPlay()
 	for (AZombieSpawner* spawner : TActorRange<AZombieSpawner>(GetWorld()))
 	{
 		spawner->OnZombieKilled.AddDynamic(this, &AZombieWaveManager::OnZombieKilled);
-		ZombieSpawners.Add(*spawner);
+		ZombieSpawners.Add(spawner);
 	}
 	
 	// Get Player UI Manager ref
