@@ -89,7 +89,7 @@ protected:
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponActivated(ABaseWeapon* Weapon) override;
 	virtual void OnWeaponDeactivated(ABaseWeapon* Weapon) override;
-	virtual void PlayWeaponMontage(UAnimMontage* Montage) override;
+	virtual void PlayWeaponMontage(UAnimMontage* Montage, float PlayRate = 1.0f) override;
 	UFUNCTION(BlueprintCallable)
 	virtual bool TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass) override;
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) override;
@@ -99,7 +99,7 @@ protected:
 	virtual void OnShotFired() override;
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
-	void BP_PlayFpsAnimMontage(UAnimMontage* Montage);
+	void BP_PlayFpsAnimMontage(UAnimMontage* Montage, float PlayRate = 1.0f);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayDeathAnimMontage();

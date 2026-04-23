@@ -26,7 +26,7 @@ struct FWeaponStats : public FTableRowBase
 	int GunDamage = 0;
 	
 	UPROPERTY(EditAnywhere)
-	float ReloadLength = 0; // need to be changed to animnotify
+	float ReloadSpeedMultiplier = 0;
 	
 	UPROPERTY(EditAnywhere)
 	bool bAutoFire = false;

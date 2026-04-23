@@ -29,6 +29,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, Category="Data")
 	int CurrentAmmo;
+	
+	UPROPERTY(VisibleAnywhere, Category="Data")
+	int CurrentReloadAnimLength;
 
 	void StartFiring();
 	void StopFiring();
@@ -98,7 +101,7 @@ protected:
 	void SwitchWeaponStats(int WeaponLevel);
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
-	void BP_PlayAnimMontage(UAnimMontage* Montage);
+	void BP_PlayAnimMontage(UAnimMontage* Montage, float PlayRate = 1.0f);
 
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;

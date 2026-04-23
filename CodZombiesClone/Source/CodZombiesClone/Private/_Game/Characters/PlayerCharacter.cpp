@@ -237,9 +237,9 @@ void APlayerCharacter::OnWeaponDeactivated(ABaseWeapon* Weapon)
 	}
 }
 
-void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage)
+void APlayerCharacter::PlayWeaponMontage(UAnimMontage* Montage, float PlayRate)
 {
-	BP_PlayFpsAnimMontage(Montage);
+	BP_PlayFpsAnimMontage(Montage, PlayRate);
 }
 
 bool APlayerCharacter::TryEquipWeapon(TSubclassOf<ABaseWeapon> WeaponClass)
