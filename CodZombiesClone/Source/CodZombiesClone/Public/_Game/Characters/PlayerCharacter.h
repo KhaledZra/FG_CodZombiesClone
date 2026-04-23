@@ -49,7 +49,9 @@ public:
 	void DoLeftFireStarted();
 	void DoLeftFireStopped();
 	void DoReload();
-	void DoInteraction();
+	void DoInteractionStarted();
+	void OnInteractionOngoing();
+	void DoInteractionStopped();
 	void DoCycleWeapons();
 	
 	void SetupPlayer(APlayerController* OwningController, FColor PlayerColor, int CurrentPlayerIndex);

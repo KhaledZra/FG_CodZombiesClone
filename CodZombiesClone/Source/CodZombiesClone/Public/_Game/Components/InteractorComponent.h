@@ -23,8 +23,16 @@ public:
 	void UpdateCost();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
-	void OnInteract(AActor* Interactor);
-	virtual void OnInteract_Implementation(AActor* Interactor);
+	void OnBeginInteract(AActor* Interactor);
+	virtual void OnBeginInteract_Implementation(AActor* Interactor);
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
+	void OnUpdateInteract(AActor* Interactor);
+	virtual void OnUpdateInteract_Implementation(AActor* Interactor);
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
+	void OnStopInteract(AActor* Interactor);
+	virtual void OnStopInteract_Implementation(AActor* Interactor);
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category="Interactor")
 	FString GetInteractString(const FText& InputKeyText) const;

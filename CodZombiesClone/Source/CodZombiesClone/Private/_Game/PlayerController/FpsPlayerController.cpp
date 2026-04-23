@@ -158,6 +158,8 @@ void AFpsPlayerController::SetupPlayerInputBinds()
 
 	// Interaction Input
 	eic->BindAction(InteractAction, ETriggerEvent::Started, this, &AFpsPlayerController::OnInteractionStarted);
+	eic->BindAction(InteractAction, ETriggerEvent::Ongoing, this, &AFpsPlayerController::OnInteractionOngoing);
+	eic->BindAction(InteractAction, ETriggerEvent::Completed, this, &AFpsPlayerController::OnInteractionCompleted);
 
 	// Cycle Weapons Input
 	eic->BindAction(CycleWeaponsAction, ETriggerEvent::Started, this, &AFpsPlayerController::CycleWeaponsStarted);
@@ -208,7 +210,17 @@ void AFpsPlayerController::OnReloadStarted()
 
 void AFpsPlayerController::OnInteractionStarted()
 {
-	CharacterRef->DoInteraction();
+	CharacterRef->DoInteractionStarted();
+}
+
+void AFpsPlayerController::OnInteractionOngoing()
+{
+	CharacterRef->OnInteractionOngoing();
+}
+
+void AFpsPlayerController::OnInteractionCompleted()
+{
+	CharacterRef->DoInteractionStopped();
 }
 
 void AFpsPlayerController::CycleWeaponsStarted()

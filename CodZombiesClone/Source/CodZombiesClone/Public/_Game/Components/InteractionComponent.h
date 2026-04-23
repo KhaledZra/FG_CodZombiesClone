@@ -23,7 +23,9 @@ public:
 	
 	void StartInteractionSystem(UCameraComponent* OwnerCamera);
 	void StopInteractionSystem();
-	void Interact();
+	void BeginInteract();
+	void UpdateInteract();
+	void StopInteract();
 
 protected:
 	UPROPERTY(EditAnywhere)

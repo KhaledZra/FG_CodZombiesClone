@@ -99,6 +99,8 @@ protected:
 	void OnLeftFireCompleted();
 	void OnReloadStarted();
 	void OnInteractionStarted();
+	void OnInteractionOngoing();
+	void OnInteractionCompleted();
 	void CycleWeaponsStarted();
 	FColor GetPlayerColor(int Index);
 };

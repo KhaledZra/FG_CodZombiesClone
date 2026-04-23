@@ -39,11 +39,25 @@ void UInteractionComponent::StopInteractionSystem()
 	GetWorld()->GetTimerManager().ClearTimer(InteractionTimerHandle);
 }
 
-void UInteractionComponent::Interact()
+void UInteractionComponent::BeginInteract()
 {
 	if (CurrentFocusedInteractor == nullptr) return;
 	
-	CurrentFocusedInteractor->OnInteract(GetOwner());
+	CurrentFocusedInteractor->OnBeginInteract(GetOwner());
+}
+
+void UInteractionComponent::UpdateInteract()
+{
+	if (CurrentFocusedInteractor == nullptr) return;
+	
+	CurrentFocusedInteractor->OnUpdateInteract(GetOwner());
+}
+
+void UInteractionComponent::StopInteract()
+{
+	if (CurrentFocusedInteractor == nullptr) return;
+	
+	CurrentFocusedInteractor->OnStopInteract(GetOwner());
 }
 
 void UInteractionComponent::UpdateInteractionSystem()
@@ -64,10 +78,12 @@ void UInteractionComponent::UpdateInteractionSystem()
 	UKismetSystemLibrary::LineTraceSingle(GetWorld(), startLocation, endLocation, TraceChannel, bTraceComplex,
 	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
 
+	// Lost connection
 	if (!OutHit.bBlockingHit || OutHit.GetActor() == nullptr)
 	{
 		if (CurrentFocusedInteractor != nullptr)
 		{
+			StopInteract();
 			CurrentFocusedInteractor = nullptr;
 			
 			if (InteractionUserRef) InteractionUserRef->OnUpdateInteractionUI("");

@@ -144,9 +144,19 @@ void APlayerCharacter::DoReload()
 	CurrentWeapon->Reload();
 }
 
-void APlayerCharacter::DoInteraction()
+void APlayerCharacter::DoInteractionStarted()
 {
-	InteractionComponent->Interact();
+	InteractionComponent->BeginInteract();
+}
+
+void APlayerCharacter::OnInteractionOngoing()
+{
+	InteractionComponent->UpdateInteract();
+}
+
+void APlayerCharacter::DoInteractionStopped()
+{
+	InteractionComponent->StopInteract();
 }
 
 void APlayerCharacter::DoCycleWeapons()

@@ -26,9 +26,19 @@ void UInteractorComponent::UpdateCost()
 	}
 }
 
-void UInteractorComponent::OnInteract_Implementation(AActor* Interactor)
+void UInteractorComponent::OnBeginInteract_Implementation(AActor* Interactor)
 {
 	UE_LOG(Khaled, Log, TEXT("Interaction activated"));
+}
+
+void UInteractorComponent::OnUpdateInteract_Implementation(AActor* Interactor)
+{
+	// UE_LOG(Khaled, Log, TEXT("Interaction Update"));
+}
+
+void UInteractorComponent::OnStopInteract_Implementation(AActor* Interactor)
+{
+	UE_LOG(Khaled, Log, TEXT("Interaction Stopped"));
 }
 
 FString UInteractorComponent::GetInteractString_Implementation(const FText& InputKeyText) const
