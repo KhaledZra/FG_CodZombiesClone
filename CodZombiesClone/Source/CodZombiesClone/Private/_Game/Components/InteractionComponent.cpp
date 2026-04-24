@@ -97,7 +97,11 @@ void UInteractionComponent::UpdateInteractionSystem()
 
 	if (UInteractorComponent* Interactor = OutHit.GetActor()->FindComponentByClass<UInteractorComponent>())
 	{
-		bRequiresUIUpdate = Interactor != CurrentFocusedInteractor;
+		if (CurrentFocusedInteractor != Interactor)
+		{
+			StopInteract();
+		}
+		bRequiresUIUpdate = true; // todo: testing cause revive does not update on same target
 		CurrentFocusedInteractor = Interactor;
 		FText inputKeyText = InteractionUserRef ? InteractionUserRef->GetInteractionKeyText() : FText::FromString("NULL");
 		newInteractionString = CurrentFocusedInteractor->GetInteractString(inputKeyText);
@@ -107,6 +111,7 @@ void UInteractionComponent::UpdateInteractionSystem()
 	else
 	{
 		bRequiresUIUpdate = CurrentFocusedInteractor != nullptr;
+		StopInteract();
 		CurrentFocusedInteractor = nullptr;
 		newInteractionString = "";
 	}

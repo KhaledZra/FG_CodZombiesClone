@@ -46,6 +46,15 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	int GetCurrentScore() const;
 	
+	UFUNCTION(BlueprintCallable)
+	void RevivePlayer();
+	
+	UFUNCTION(BlueprintCallable)
+	void StartReviveOtherPlayer();
+	
+	UFUNCTION(BlueprintCallable)
+	void FinishedReviveOtherPlayer();
+	
 	void DoLeftFireStarted();
 	void DoLeftFireStopped();
 	void DoReload();
@@ -98,6 +107,9 @@ protected:
 	
 	UPROPERTY()
 	TObjectPtr<AFpsPlayerController> FpsControllerRef;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAnimMontage> RevivePlayerMontage;
 
 	/** IWeaponUser implementation */
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
@@ -127,6 +139,10 @@ protected:
 	// IHealthUser interface
 	virtual void OnDeath() override;
 	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) override;
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Death")
+	void BP_OnDeath();
+	
 	
 	// IInteractionUser interface
 	virtual void OnUpdateInteractionUI(const FString& InteractString) override;

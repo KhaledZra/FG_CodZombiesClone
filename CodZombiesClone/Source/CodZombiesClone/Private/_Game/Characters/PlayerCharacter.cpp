@@ -6,6 +6,7 @@
 #include "CodZombiesClone.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "_Game/Components/HealthComponent.h"
 #include "_Game/Components/InteractionComponent.h"
 #include "_Game/PlayerController/FpsPlayerController.h"
 #include "_Game/Weapons/BaseWeapon.h"
@@ -21,6 +22,8 @@ APlayerCharacter::APlayerCharacter()
 
 	StartingScore = 500;
 	CurrentScore = StartingScore;
+	
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 }
 
 void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int CurrentPlayerIndex)
@@ -96,6 +99,8 @@ void APlayerCharacter::OnDeath()
 	FpsControllerRef->SwitchDownedInputs();
 	bIsDowned = true;
 	BP_PlayDeathAnimMontage();
+	TryUseScore(1000); // lose 1k on downed
+	BP_OnDeath();
 }
 
 void APlayerCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth)
@@ -193,11 +198,25 @@ void APlayerCharacter::SetupPlayer(APlayerController* OwningController, FColor P
 	{
 		FpsControllerRef = fpsCont;
 	}
+	
+	HealthComponent->SetMaxHealth(100);
+	HealthComponent->FullHeal();
 }
 
 bool APlayerCharacter::GetIsDowned() const
 {
 	return bIsDowned;
+}
+
+void APlayerCharacter::StartReviveOtherPlayer()
+{
+	BP_PlayFpsAnimMontage(RevivePlayerMontage);
+}
+
+void APlayerCharacter::FinishedReviveOtherPlayer()
+{
+	GetFirstPersonMesh()->GetAnimInstance()->Montage_Stop(0.25f, RevivePlayerMontage);
+	GetMesh()->GetAnimInstance()->Montage_Stop(0.25f, RevivePlayerMontage);
 }
 
 // Right now this is called inside the BaseWeapon BeginPlay
@@ -313,4 +332,11 @@ void APlayerCharacter::OnShotFired()
 	{
 		auto test = FpsController->GetInteractionKeyText();
 	}
+}
+
+void APlayerCharacter::RevivePlayer()
+{
+	FpsControllerRef->SwitchPlayingInputs();
+	bIsDowned = false;
+	HealthComponent->FullHeal();
 }

@@ -77,7 +77,7 @@ void AZombieCharacter::SetupZombie(FZombieStats Stats)
 {
 	AttackDamage = Stats.Damage;
 	GetCharacterMovement()->MaxWalkSpeed = Stats.Speed;
-	HealthComponent->SetMaxHealth(Stats.Health);
+	HealthComponent->SetMaxHealth(Stats.Health, true);
 }
 
 void AZombieCharacter::BeginPlay()

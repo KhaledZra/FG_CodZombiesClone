@@ -22,6 +22,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Heal(const int& HealAmount);
+	
+	UFUNCTION(BlueprintCallable, Category="Health")
+	void FullHeal();
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void TakeDamage(const int& DamageAmount, const FString& BodyPartName, bool& bOutIsDead);
@@ -42,10 +45,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	int CurrentHealth;
-
-	UPROPERTY(EditAnywhere, Category="Health")
-	int StartingMaxHealth;
-	
 	
 protected:
 	// Called when the game starts
