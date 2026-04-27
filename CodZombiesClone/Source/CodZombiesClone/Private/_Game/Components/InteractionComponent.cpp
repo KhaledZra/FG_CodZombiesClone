@@ -71,7 +71,7 @@ void UInteractionComponent::UpdateInteractionSystem()
 	bool bTraceComplex = true;
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(GetOwner());
-	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::ForDuration;
+	EDrawDebugTrace::Type DrawDebugType = EDrawDebugTrace::None;
 	FHitResult OutHit;
 	bool bIgnoreSelf = true;
 

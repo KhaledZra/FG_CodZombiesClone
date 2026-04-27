@@ -200,12 +200,12 @@ void ABaseWeapon::Fire()
 	{
 		for (int i = 0; i < CurrentWeaponStats.SpreadCount; i++)
 		{
-			FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, true);
+			FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, false);
 		}
 	}
 	else
 	{
-		FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, true);
+		FireBulletRay(startLocation, direction, TraceChannel, ActorsToIgnore, false);
 	}
 
 	// If it's auto set a timer to keep firing
