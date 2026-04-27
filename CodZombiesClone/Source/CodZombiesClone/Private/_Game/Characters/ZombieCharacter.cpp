@@ -101,8 +101,12 @@ void AZombieCharacter::OnDeath()
 	// Enable ragdoll
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetMesh()->SetSimulatePhysics(true);
+	
+	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Ignore);
 	// Bugs out players hand controller
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Ignore);
 
 	GetWorld()->GetTimerManager().SetTimer(OnDeathTimerHandle,
 	                                       FTimerDelegate::CreateLambda([this]
