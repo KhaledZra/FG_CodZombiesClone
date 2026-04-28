@@ -3,6 +3,7 @@
 
 #include "_Game/Components/HealthComponent.h"
 
+#include "Kismet/GameplayStatics.h"
 #include "_Game/Interfaces/HealthUser.h"
 
 
@@ -52,13 +53,26 @@ void UHealthComponent::FullHeal()
 	if (HealthUser) HealthUser->OnHealthUIUpdate(CurrentHealth, MaxHealth);
 }
 
-void UHealthComponent::TakeDamage(const int& DamageAmount, const FString& BodyPartName, bool& bOutIsDead)
+void UHealthComponent::TakeDamage(const int& DamageAmount, const FString& BodyPartName, const FVector& HitLocation,
+                                  const FRotator& RotationNormal, bool& bOutIsDead)
 {
 	bOutIsDead = false;
+
+	if (HitSplatVfx)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(
+			GetWorld(),
+			HitSplatVfx,
+			HitLocation,
+			RotationNormal + FRotator(-90.f, 0.f, 0.f)
+		);
+	}
 	
+	if (bIsGodMode) return;
+
 	// Hardcoded ngl
 	int finalDamageAmount = BodyPartName.Equals("head", ESearchCase::IgnoreCase) ? DamageAmount * 2 : DamageAmount;
-	
+
 	CurrentHealth = FMath::Max(CurrentHealth - finalDamageAmount, 0);
 	if (HealthUser)
 	{

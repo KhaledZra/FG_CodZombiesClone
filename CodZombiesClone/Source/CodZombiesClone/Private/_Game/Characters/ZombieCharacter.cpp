@@ -68,7 +68,7 @@ void AZombieCharacter::AttackForward()
 		if (UHealthComponent* hc = hitActor->FindComponentByClass<UHealthComponent>())
 		{
 			bool bIsDead = false; // not really cared for rn.
-			hc->TakeDamage(AttackDamage, "", bIsDead);
+			hc->TakeDamage(AttackDamage, "", hitActor->GetActorLocation(), hitActor->GetActorRotation(), bIsDead);
 		}
 	}
 }
@@ -97,11 +97,11 @@ void AZombieCharacter::OnDeath()
 	// Precall this then clear it since it will broadcast again
 	OnDestroyed.Broadcast(this);
 	OnDestroyed.Clear();
-	
+
 	// Enable ragdoll
 	GetMesh()->SetCollisionProfileName("Ragdoll");
 	GetMesh()->SetSimulatePhysics(true);
-	
+
 	GetMesh()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Ignore);
 	// Bugs out players hand controller
@@ -118,7 +118,7 @@ void AZombieCharacter::OnDeath()
 void AZombieCharacter::OnHurt()
 {
 	if (HurtAnimMontages.IsEmpty()) return;
-	
+
 	// todo: could be enhanced by playing based on hitlocation or by using PhysicalAnimations
 	BP_PlayAnimMontage(HurtAnimMontages[FMath::RandRange(0, HurtAnimMontages.Num() - 1)]);
 }

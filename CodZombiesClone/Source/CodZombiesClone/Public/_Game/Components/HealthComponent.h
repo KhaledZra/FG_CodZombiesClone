@@ -22,16 +22,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Heal(const int& HealAmount);
-	
+
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void FullHeal();
 
 	UFUNCTION(BlueprintCallable, Category="Health")
-	void TakeDamage(const int& DamageAmount, const FString& BodyPartName, bool& bOutIsDead);
-	
+	void TakeDamage(const int& DamageAmount, const FString& BodyPartName, const FVector& HitLocation,
+	                const FRotator& RotationNormal, bool& bOutIsDead);
+
 	UFUNCTION(BlueprintCallable, Category="Health")
 	void Die();
-	
+
 	UFUNCTION(BlueprintCallable, Category="Health")
 	bool IsDead();
 
@@ -46,6 +47,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	int CurrentHealth;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	bool bIsGodMode;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
+	TObjectPtr<UParticleSystem> HitSplatVfx;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

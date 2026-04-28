@@ -64,7 +64,7 @@ void ABaseWeapon::SetupWeapon(FDataTableRowHandle WeaponData)
 		CurrentWeaponLevel = 0;
 		MaxWeaponLevel = data->WeaponStatsArray.Num() - 1;
 		CurrentReloadAnimLength = ReloadMontage->GetPlayLength();
-		
+
 		UMaterialInterface* matInterface = data->WeaponStatsArray[0].WeaponMaterial.LoadSynchronous();
 		GetFirstPersonMesh()->SetMaterial(0, matInterface);
 		GetThirdPersonMesh()->SetMaterial(0, matInterface);
@@ -244,23 +244,24 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 	bool bIgnoreSelf = true;
 
 	UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartLocation, endLocation, TraceChannel, bTraceComplex,
-										  ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
+	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
 	FVector muzzleLocation = FpsMesh->GetSocketLocation(FName("Muzzle"));
-	
+
 	if (OutHit.bBlockingHit == false)
 	{
 		BP_PlayWeaponTrace(muzzleLocation, endLocation, CurrentWeaponStats.LineTraceColor); // no hit
 		return;
 	}
-	
+
 	BP_PlayWeaponTrace(muzzleLocation, OutHit.ImpactPoint, CurrentWeaponStats.LineTraceColor); // hit
 	if (OutHit.GetActor() == nullptr) return;
 	UHealthComponent* HealthComp = OutHit.GetActor()->FindComponentByClass<UHealthComponent>();
 	if (HealthComp == nullptr || HealthComp->IsDead()) return;
 
 	bool bIsDead = false;
-	HealthComp->TakeDamage(CurrentWeaponStats.GunDamage, OutHit.BoneName.ToString(), bIsDead);
-	
+	HealthComp->TakeDamage(CurrentWeaponStats.GunDamage, OutHit.BoneName.ToString(), OutHit.ImpactPoint,
+	                       OutHit.ImpactNormal.Rotation(), bIsDead);
+
 	WeaponUser->OnEnemyHit(OutHit.BoneName.ToString().ToLower(), bIsDead);
 }
 
