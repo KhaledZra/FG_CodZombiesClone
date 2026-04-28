@@ -111,4 +111,7 @@ protected:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="VFX")
 	void BP_PlayWeaponTrace(const FVector& StartLocation, const FVector& EndLocation, const FColor& TraceColor);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="VFX")
+	void BP_PlayWeaponMuzzleFlash(const FVector& StartLocation, const FRotator& MuzzleRotation);
 };

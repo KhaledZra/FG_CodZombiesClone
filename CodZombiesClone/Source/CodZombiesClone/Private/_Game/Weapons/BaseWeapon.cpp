@@ -246,7 +246,9 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 	UKismetSystemLibrary::LineTraceSingle(GetWorld(), StartLocation, endLocation, TraceChannel, bTraceComplex,
 	                                      ActorsToIgnore, DrawDebugType, OutHit, bIgnoreSelf);
 	FVector muzzleLocation = FpsMesh->GetSocketLocation(FName("Muzzle"));
+	FRotator muzzleDirection = FpsMesh->GetSocketRotation(FName("Muzzle")) + FRotator(-90.f, 0.f, 0.f);
 
+	BP_PlayWeaponMuzzleFlash(muzzleLocation, muzzleDirection);
 	if (OutHit.bBlockingHit == false)
 	{
 		BP_PlayWeaponTrace(muzzleLocation, endLocation, CurrentWeaponStats.LineTraceColor); // no hit

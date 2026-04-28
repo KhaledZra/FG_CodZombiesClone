@@ -95,5 +95,6 @@ void UHealthComponent::Die()
 
 bool UHealthComponent::IsDead()
 {
+	if (bIsGodMode) return false;
 	return CurrentHealth <= 0;
 }
