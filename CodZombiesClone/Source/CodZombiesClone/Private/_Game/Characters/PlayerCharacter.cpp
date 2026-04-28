@@ -316,9 +316,21 @@ void APlayerCharacter::AddRecoil(float RecoilStrength)
 	AddControllerPitchInput(-RecoilStrength);
 }
 
-void APlayerCharacter::OnEnemyHit(int Points)
+void APlayerCharacter::OnEnemyHit(const FString& BoneHit, bool bIsKill)
 {
-	GainScore(Points);
+	// Todo: hardcoded points, change to a manager that register points better
+	// Normal hit equals 10 points
+	// Kill equals 50 points
+	// Headshot kill equals 100 points
+	bool bHeadshotKill = bIsKill && BoneHit == "head";
+	int pointsGained = bIsKill ? (bHeadshotKill ? 50 : 25) : 10;
+	
+	GainScore(pointsGained);
+	
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_OnTargetHit(bIsKill);
+	}
 }
 
 void APlayerCharacter::OnShotFired()
@@ -326,11 +338,6 @@ void APlayerCharacter::OnShotFired()
 	if (PlayerUIRef)
 	{
 		PlayerUIRef->BP_ShotFired();
-	}
-
-	if (AFpsPlayerController* FpsController = Cast<AFpsPlayerController>(GetController()))
-	{
-		auto test = FpsController->GetInteractionKeyText();
 	}
 }
 

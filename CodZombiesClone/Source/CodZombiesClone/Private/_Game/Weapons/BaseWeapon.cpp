@@ -260,15 +260,8 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 
 	bool bIsDead = false;
 	HealthComp->TakeDamage(CurrentWeaponStats.GunDamage, OutHit.BoneName.ToString(), bIsDead);
-
-	// Todo: hardcoded points, change to a manager that register points better
-	// Normal hit equals 10 points
-	// Kill equals 50 points
-	// Headshot kill equals 100 points
-
-	bool bHeadshotKill = bIsDead && OutHit.BoneName.ToString().Equals("head", ESearchCase::IgnoreCase);
-	int pointsGained = bIsDead ? (bHeadshotKill ? 100 : 50) : 10;
-	WeaponUser->OnEnemyHit(pointsGained);
+	
+	WeaponUser->OnEnemyHit(OutHit.BoneName.ToString().ToLower(), bIsDead);
 }
 
 void ABaseWeapon::OnReloadComplete()

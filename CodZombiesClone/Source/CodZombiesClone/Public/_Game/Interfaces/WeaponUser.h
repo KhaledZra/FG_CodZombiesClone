@@ -31,6 +31,6 @@ public:
 	virtual void GetTargetAimLocation(FVector& OutStartLocation, FVector& OutWorldDirection) = 0;
 	virtual void UpdateWeaponHud(int CurrentAmmo, int MagazineSize) = 0;
 	virtual void AddRecoil(float RecoilStrength) = 0;
-	virtual void OnEnemyHit(int Points) = 0;
+	virtual void OnEnemyHit(const FString& BoneHit, bool bIsKill) = 0;
 	virtual void OnShotFired() = 0;
 };

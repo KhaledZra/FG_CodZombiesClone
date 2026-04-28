@@ -58,4 +58,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "Update Wave"))
 	void BP_WaveUpdated(const int NewWave);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "On Target Hit"))
+	void BP_OnTargetHit(const bool bIsKill);
 };
