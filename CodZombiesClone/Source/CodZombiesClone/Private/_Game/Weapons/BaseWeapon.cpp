@@ -38,7 +38,7 @@ ABaseWeapon::ABaseWeapon()
 void ABaseWeapon::SetupWeapon(FDataTableRowHandle WeaponData)
 {
 	CurrentWeaponData = WeaponData;
-	
+
 	// Cache data from the data table
 	if (FWeaponDataTableRow* data = WeaponData.GetRow<FWeaponDataTableRow>(FString()))
 	{
@@ -58,14 +58,14 @@ void ABaseWeapon::SetupWeapon(FDataTableRowHandle WeaponData)
 
 		FirstPersonAnimInstanceClass = data->FirstPersonAnimInstanceClass;
 		ThirdPersonAnimInstanceClass = data->ThirdPersonAnimInstanceClass;
-		
+
 		if (data->WeaponStatsArray.IsEmpty()) return;
 		CurrentWeaponStats = data->WeaponStatsArray[0];
 		CurrentWeaponLevel = 0;
 		MaxWeaponLevel = data->WeaponStatsArray.Num() - 1;
 		CurrentReloadAnimLength = ReloadMontage->GetPlayLength();
 	}
-	
+
 	SetActorHiddenInGame(true);
 
 	// Ensure weapon destroys with owner
@@ -121,12 +121,12 @@ void ABaseWeapon::Reload()
 	if (bIsReloading) return;
 	bIsReloading = true;
 
-	
+
 	float reloadTime = CurrentReloadAnimLength / CurrentWeaponStats.ReloadSpeedMultiplier;
 	GetWorld()->GetTimerManager().SetTimer(ReloadTimer,
 	                                       this, &ABaseWeapon::OnReloadComplete,
 	                                       reloadTime, false);
-	
+
 	WeaponUser->PlayWeaponMontage(ReloadMontage, CurrentWeaponStats.ReloadSpeedMultiplier);
 	BP_PlayAnimMontage(WeaponReloadMontage, CurrentWeaponStats.ReloadSpeedMultiplier);
 	UE_LOG(Khaled, Log, TEXT("Reload Started"));
@@ -147,7 +147,7 @@ bool ABaseWeapon::CanUpgradeWeapon() const
 bool ABaseWeapon::TryUpgradeWeapon()
 {
 	if (CanUpgradeWeapon() == false) return false;
-	
+
 	SwitchWeaponStats(CurrentWeaponLevel + 1);
 	CurrentAmmo = CurrentWeaponStats.MagazineSize;
 	ActivateWeapon();
@@ -225,15 +225,15 @@ void ABaseWeapon::FireBulletRay(const FVector& StartLocation, const FVector& Dir
 {
 	FVector endLocation = FVector::ZeroVector;
 	FVector direction = Direction;
-	
+
 	if (CurrentWeaponStats.bShotgunSpread)
 	{
 		direction = UKismetMathLibrary::RandomUnitVectorInConeInDegrees(Direction, CurrentWeaponStats.MaxSpreadDegree);
 	}
-	
+
 	endLocation = StartLocation + (direction * CurrentWeaponStats.BulletRange);
-	
-	
+
+
 	bool bTraceComplex = true;
 	EDrawDebugTrace::Type DrawDebugType = bDrawDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None;
 	FHitResult OutHit;
@@ -273,5 +273,9 @@ void ABaseWeapon::SwitchWeaponStats(int WeaponLevel)
 		if (data->WeaponStatsArray.IsEmpty()) return;
 		CurrentWeaponStats = data->WeaponStatsArray[WeaponLevel];
 		CurrentWeaponLevel = WeaponLevel;
+
+		UMaterialInterface* matInterface = data->WeaponStatsArray[WeaponLevel].WeaponMaterial.LoadSynchronous();
+		GetFirstPersonMesh()->SetMaterial(0, matInterface);
+		GetThirdPersonMesh()->SetMaterial(0, matInterface);
 	}
 }

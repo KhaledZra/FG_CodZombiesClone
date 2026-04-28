@@ -8,6 +8,9 @@ struct FWeaponStats : public FTableRowBase
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UMaterialInterface> WeaponMaterial;
+	
+	UPROPERTY(EditAnywhere)
 	int MagazineSize = 0;
 
 	UPROPERTY(EditAnywhere)
