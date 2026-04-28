@@ -108,4 +108,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent, Category="Animation")
 	void BP_PlayAnimMontage(UAnimMontage* Montage, float PlayRate = 1.0f);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="VFX")
+	void BP_PlayWeaponTrace(const FVector& StartLocation, const FVector& EndLocation, const FColor& TraceColor);
 };

@@ -11,6 +11,9 @@ struct FWeaponStats : public FTableRowBase
 	TSoftObjectPtr<UMaterialInterface> WeaponMaterial;
 	
 	UPROPERTY(EditAnywhere)
+	FColor LineTraceColor = FColor::White;
+	
+	UPROPERTY(EditAnywhere)
 	int MagazineSize = 0;
 
 	UPROPERTY(EditAnywhere)
