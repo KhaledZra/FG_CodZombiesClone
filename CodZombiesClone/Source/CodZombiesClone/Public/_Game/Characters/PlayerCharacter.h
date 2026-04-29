@@ -108,8 +108,11 @@ protected:
 	UPROPERTY()
 	TObjectPtr<AFpsPlayerController> FpsControllerRef;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Animation")
 	TObjectPtr<UAnimMontage> RevivePlayerMontage;
+	
+	UPROPERTY(EditAnywhere, Category="Animation")
+	TArray<TObjectPtr<UAnimMontage>> HurtAnimMontages;
 
 	/** IWeaponUser implementation */
 	virtual void AttachWeapon(ABaseWeapon* Weapon) override;
@@ -139,6 +142,7 @@ protected:
 	// IHealthUser interface
 	virtual void OnDeath() override;
 	virtual void OnHealthUIUpdate(const int& CurrentHealth, const int& MaxHealth) override;
+	virtual void OnHurt() override;
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Death")
 	void BP_OnDeath();

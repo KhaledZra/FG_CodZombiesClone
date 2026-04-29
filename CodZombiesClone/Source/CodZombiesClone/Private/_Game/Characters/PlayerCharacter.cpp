@@ -110,6 +110,13 @@ void APlayerCharacter::OnHealthUIUpdate(const int& CurrentHealth, const int& Max
 	}
 }
 
+void APlayerCharacter::OnHurt()
+{
+	if (HurtAnimMontages.IsEmpty()) return;
+
+	BP_PlayFpsAnimMontage(HurtAnimMontages[FMath::RandRange(0, HurtAnimMontages.Num() - 1)]);
+}
+
 void APlayerCharacter::OnUpdateInteractionUI(const FString& InteractString)
 {
 	if (PlayerUIRef)
