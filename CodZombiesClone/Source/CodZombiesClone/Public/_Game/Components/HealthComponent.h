@@ -35,9 +35,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category="Health")
 	bool IsDead();
+	
+	UFUNCTION(BlueprintCallable, Category="Health")
+	bool IsFullHealth();
 
 protected:
 	IHealthUser* HealthUser;
+	
+	FTimerHandle HealthRegenHandle;
 
 	// todo: Maybe load using DT in future
 
@@ -50,8 +55,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	bool bIsGodMode;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health Generation")
+	bool bHealthRegenerationActive = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health Generation")
+	int HealthGenerationHeal = 1;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health Generation")
+	float HealthGenerationDelay = 5.0f;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VFX")
 	TObjectPtr<UParticleSystem> HitSplatVfx;
+	
+	UFUNCTION()
+	void UpdateHealthGeneration();
 
 protected:
 	// Called when the game starts

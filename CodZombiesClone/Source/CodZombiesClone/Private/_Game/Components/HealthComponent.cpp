@@ -19,10 +19,25 @@ UHealthComponent::UHealthComponent()
 }
 
 
+void UHealthComponent::UpdateHealthGeneration()
+{
+	Heal(HealthGenerationHeal);
+
+	if (IsFullHealth())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(HealthRegenHandle);
+	}
+}
+
 // Called when the game starts
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (bHealthRegenerationActive)
+	{
+		GetWorld()->GetTimerManager().SetTimer(HealthRegenHandle, this, &UHealthComponent::UpdateHealthGeneration, 0.05f, true, HealthGenerationDelay);
+	}
 }
 
 
@@ -85,10 +100,21 @@ void UHealthComponent::TakeDamage(const int& DamageAmount, const FString& BodyPa
 		Die();
 		bOutIsDead = true;
 	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(HealthRegenHandle);
+		
+		if (bHealthRegenerationActive)
+		{
+			GetWorld()->GetTimerManager().SetTimer(HealthRegenHandle, this, &UHealthComponent::UpdateHealthGeneration, 0.05f, true, HealthGenerationDelay);
+		}
+	}
 }
 
 void UHealthComponent::Die()
 {
+	GetWorld()->GetTimerManager().ClearTimer(HealthRegenHandle);
+
 	if (HealthUser) HealthUser->OnDeath();
 	else GetOwner()->Destroy();
 }
@@ -97,4 +123,9 @@ bool UHealthComponent::IsDead()
 {
 	if (bIsGodMode) return false;
 	return CurrentHealth <= 0;
+}
+
+bool UHealthComponent::IsFullHealth()
+{
+	return CurrentHealth >= MaxHealth;
 }
