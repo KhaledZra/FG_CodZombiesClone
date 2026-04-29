@@ -5,6 +5,8 @@
 
 #include "CodZombiesClone.h"
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "_Game/Actors/ZombieSpawner.h"
 #include "_Game/Managers/PlayerUIManager.h"
 
@@ -31,7 +33,7 @@ void AZombieWaveManager::OnZombieKilled()
 void AZombieWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	// both of these work.
 	//for (TActorIterator<AZombieSpawner> Itr(GetWorld()); Itr; ++Itr)
 	for (AZombieSpawner* spawner : TActorRange<AZombieSpawner>(GetWorld()))
@@ -39,7 +41,7 @@ void AZombieWaveManager::BeginPlay()
 		spawner->OnZombieKilled.AddDynamic(this, &AZombieWaveManager::OnZombieKilled);
 		ZombieSpawners.Add(spawner);
 	}
-	
+
 	// Get Player UI Manager ref
 	if (const TActorIterator<APlayerUIManager> Itr(GetWorld()); Itr)
 	{
@@ -77,6 +79,12 @@ void AZombieWaveManager::SpawnIteration()
 
 void AZombieWaveManager::StartWaveSpawner()
 {
+	// Play Round Start Sound
+	if (RoundStartAudio)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), RoundStartAudio);
+	}
+
 	UE_LOG(Khaled, Warning, TEXT("AZombieWaveManager::BeginPlay - Wave %i Started!"), GetCurrentWave());
 	bWaveActive = true;
 	GetWorld()->GetTimerManager().SetTimer(WaveSpawnTimerHandle, this, &AZombieWaveManager::SpawnIteration,
@@ -105,14 +113,25 @@ void AZombieWaveManager::TriggerNextWave()
 	{
 		PlayerUIManagerRef->UpdateWave(GetCurrentWave());
 	}
-	
+
+	// if (CurrentWaveIndex != 1) // Play Round Over Audio
+	// {
+	//
+	// }
+
+	if (RoundEndAudio)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), RoundEndAudio);
+	}
+
 	GetWorld()->GetTimerManager().SetTimer(WaveStartCooldownTimerHandle, this, &AZombieWaveManager::StartWaveSpawner,
 	                                       WaveStartCooldown, false);
-	
+
 	// Mostly for debugging
 	FZombieStats OutStats;
 	CalcScaledZombieStats(OutStats);
-	UE_LOG(Khaled, Warning, TEXT("Zombie Stats - Health: %i | Speed: %i | Damage: %i"), OutStats.Health, OutStats.Speed, OutStats.Damage);
+	UE_LOG(Khaled, Warning, TEXT("Zombie Stats - Health: %i | Speed: %i | Damage: %i"), OutStats.Health, OutStats.Speed,
+	       OutStats.Damage);
 }
 
 void AZombieWaveManager::CalcScaledZombieStats(FZombieStats& OutStats) const

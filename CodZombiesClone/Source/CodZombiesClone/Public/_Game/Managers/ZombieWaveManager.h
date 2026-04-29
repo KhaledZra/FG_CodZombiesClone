@@ -37,6 +37,12 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Wave")
 	TArray<TObjectPtr<AZombieSpawner>> ZombieSpawners;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	TObjectPtr<USoundBase> RoundStartAudio;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Audio")
+	TObjectPtr<USoundBase> RoundEndAudio;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Wave")
 	TSubclassOf<AZombieCharacter> ZombieClass;
