@@ -1,3 +1,6 @@
+## Project
+This is part of my FutureGames C++ with Unreal course.
+
 ## Game Guide
 This game is an attempt to clone Call of duty Zombies. It's a wave based zombie survival game.
 Your goal is to survive for the highest amount of rounds possible and set new highscores. You can survive alone or with friends 1-4 player coop.
