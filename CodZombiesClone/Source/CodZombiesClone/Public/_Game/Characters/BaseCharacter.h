@@ -33,6 +33,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UHealthComponent> HealthComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Settings")
+	float LookSensitivityScale = 40.0f;
 
 public:
 	// Sets default values for this character's properties

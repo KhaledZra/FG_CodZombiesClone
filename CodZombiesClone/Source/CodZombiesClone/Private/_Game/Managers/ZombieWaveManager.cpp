@@ -137,6 +137,6 @@ void AZombieWaveManager::TriggerNextWave()
 void AZombieWaveManager::CalcScaledZombieStats(FZombieStats& OutStats) const
 {
 	OutStats.Damage = 50;
-	OutStats.Health = FMath::Min(20 + (CurrentWaveIndex * 5), 100);
-	OutStats.Speed = FMath::Min(150 + (CurrentWaveIndex * 50), 300);
+	OutStats.Health = FMath::Min(10 + (CurrentWaveIndex * 5), 100);
+	OutStats.Speed = FMath::Min(150 + (CurrentWaveIndex * 25), 300);
 }

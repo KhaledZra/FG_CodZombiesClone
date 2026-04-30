@@ -43,11 +43,10 @@ void AZombieCharacter::AttackForward()
 	{
 		BP_PlayAnimMontage(AttackMontages[FMath::RandRange(0, AttackMontages.Num() - 1)]);
 	}
-
-	// Hardcoded
+	
 	FVector attackLocation = GetActorLocation() + (GetActorForwardVector() * AttackRange);
-	UKismetSystemLibrary::DrawDebugSphere(GetWorld(), attackLocation, AttackSphereRadius, 12, FLinearColor::Red, 1.0f,
-	                                      1.0f);
+	// UKismetSystemLibrary::DrawDebugSphere(GetWorld(), attackLocation, AttackSphereRadius, 12, FLinearColor::Red, 1.0f,
+	//                                       1.0f);
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Visibility));

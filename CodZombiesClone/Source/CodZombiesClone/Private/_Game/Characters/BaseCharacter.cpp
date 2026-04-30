@@ -59,8 +59,9 @@ void ABaseCharacter::DoAim(float Yaw, float Pitch)
 {
 	if (!GetController()) return;
 	
-	AddControllerYawInput(Yaw);
-	AddControllerPitchInput(Pitch);
+	
+	AddControllerYawInput(Yaw * (LookSensitivityScale * GetWorld()->GetDeltaSeconds()));
+	AddControllerPitchInput(Pitch * (LookSensitivityScale * GetWorld()->GetDeltaSeconds()));
 }
 
 void ABaseCharacter::DoMove(float Right, float Forward)
