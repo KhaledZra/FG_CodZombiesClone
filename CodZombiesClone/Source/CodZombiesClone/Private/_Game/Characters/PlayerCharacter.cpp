@@ -334,7 +334,7 @@ void APlayerCharacter::OnEnemyHit(const FString& BoneHit, bool bIsKill)
 	// Kill equals 50 points
 	// Headshot kill equals 100 points
 	bool bHeadshotKill = bIsKill && BoneHit == "head";
-	int pointsGained = bIsKill ? (bHeadshotKill ? 50 : 25) : 10;
+	int pointsGained = bIsKill ? (bHeadshotKill ? 150 : 75) : 10;
 	
 	GainScore(pointsGained);
 	
