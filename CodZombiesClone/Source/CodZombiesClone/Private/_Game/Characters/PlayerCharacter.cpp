@@ -32,7 +32,7 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int C
 	PlayerUIRef->AddToPlayerScreen();
 
 	PlayerUIRef->SetupPlayerUI(CurrentPlayerIndex, this);
-	PlayerUIRef->UpdateScore(CurrentScore, CurrentPlayerIndex);
+	PlayerUIRef->UpdateScore(CurrentScore, CurrentPlayerIndex, CurrentScore, "+");
 	PlayerUIRef->BP_UpdateInteractionText("");
 
 	// UE_LOG(Khaled, Warning, TEXT("Widget instance: %p | Controller: %s"),
@@ -43,7 +43,7 @@ void APlayerCharacter::CreatePlayerUI(APlayerController* OwningController, int C
 void APlayerCharacter::GainScore(int Score)
 {
 	CurrentScore += Score;
-	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex, Score, "+");
 }
 
 bool APlayerCharacter::TryUseScore(int Score)
@@ -51,7 +51,7 @@ bool APlayerCharacter::TryUseScore(int Score)
 	if (CurrentScore < Score) return false;
 
 	CurrentScore -= Score;
-	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex);
+	if (PlayerUIRef) PlayerUIRef->UpdateScore(CurrentScore, PlayerIndex, Score, "-");
 	return true;
 }
 
@@ -115,6 +115,11 @@ void APlayerCharacter::OnHurt()
 	if (HurtAnimMontages.IsEmpty()) return;
 
 	BP_PlayFpsAnimMontage(HurtAnimMontages[FMath::RandRange(0, HurtAnimMontages.Num() - 1)]);
+	
+	if (PlayerUIRef)
+	{
+		PlayerUIRef->BP_OnHurt();
+	}
 }
 
 void APlayerCharacter::OnUpdateInteractionUI(const FString& InteractString)

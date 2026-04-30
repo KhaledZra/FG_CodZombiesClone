@@ -24,7 +24,7 @@ public:
 	TObjectPtr<APlayerCharacter> PlayerRef;
 	
 	UFUNCTION()
-	void UpdateScore(int NewScore, int PlayerIndex);
+	void UpdateScore(int NewScore, int PlayerIndex, int ScoreChange, const FString& ScoreSymbol);
 	
 	UFUNCTION()
 	void SetupPlayerUI(int PlayerIndex, APlayerCharacter* Player);
@@ -35,7 +35,7 @@ public:
 	
 	// Let's the UI BP handle the updating of the widget
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta = (DisplayName = "Score Updated"))
-	void BP_ScoreUpdated(int Score, int PlayerIndex);
+	void BP_ScoreUpdated(int Score, int PlayerIndex, int ScoreChange, const FString& ScoreSymbol);
 	
 	// Let's the UI BP handle the updating of the widget
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta = (DisplayName = "Sets the main player"))
@@ -61,4 +61,7 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "On Target Hit"))
 	void BP_OnTargetHit(const bool bIsKill);
+	
+	UFUNCTION(BlueprintImplementableEvent, Category="Player", meta=(DisplayName = "On Hurt"))
+	void BP_OnHurt();
 };

@@ -7,9 +7,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "_Game/Managers/PlayerUIManager.h"
 
-void UPlayerUI::UpdateScore(int NewScore, int PlayerIndex)
+void UPlayerUI::UpdateScore(int NewScore, int PlayerIndex, int ScoreChange, const FString& ScoreSymbol)
 {
-	if (ManagerRef) ManagerRef->UpdateUI(NewScore, PlayerIndex);
+	if (ManagerRef) ManagerRef->UpdateUI(NewScore, PlayerIndex, ScoreChange, ScoreSymbol);
 }
 
 void UPlayerUI::SetupPlayerUI(int PlayerIndex, APlayerCharacter* Player)

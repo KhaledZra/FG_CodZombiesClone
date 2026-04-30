@@ -21,7 +21,7 @@ public:
 	void AddPlayerUI(UPlayerUI* PlayerUI, int PlayerIndex);
 	
 	UFUNCTION()
-	void UpdateUI(int NewScore, int PlayerIndex);
+	void UpdateUI(int NewScore, int PlayerIndex, int ScoreChange, const FString& ScoreSymbol);
 	
 	UFUNCTION()
 	void UpdateWave(int NewWave);
