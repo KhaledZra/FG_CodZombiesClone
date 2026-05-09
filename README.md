@@ -54,6 +54,8 @@ Playing with friends introduced the revive mechanic. So if you are 2+ players yo
 
 "Perk Machines" (https://skfb.ly/6VYpL) by FacultyManBruce is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
+"Old electric switch" (https://skfb.ly/oM6Xy) by LongJohn is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
 ### Sounds
 https://www.101soundboards.com/boards/689863-call-of-duty-zombies-soundtrack-treyarch-treyarch-zombies-call-of-duty-zombies-nazi
 
